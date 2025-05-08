@@ -1,0 +1,20 @@
+[user]
+	name = J. Roberto González
+	email = 67397118+rgsx@users.noreply.github.com
+	signingkey = 40D24CB579AE8FE8
+[init]
+	defaultBranch = main
+[color]
+	ui = auto
+[core]
+	editor = nvim
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[gpg]
+	program = gpg
+	format = openpgp
+[safe]
+	directory = /Users/robert/.dev/dotfiles

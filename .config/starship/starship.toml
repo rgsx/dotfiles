@@ -1,0 +1,120 @@
+# Get editor completions based on the config schema
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# Starship Config
+add_newline = false
+
+format = """
+($cmd_duration\n)\
+($directory)($fill)\
+(($git_branch)($git_commit)(${custom.giturl})($git_state)($git_status))\
+(${custom.divider})(($bun)($package)($nodejs)(${custom.angular})($lua)($all))\
+(($sudo)$character)
+"""
+continuation_prompt = '󰄾 '
+
+[character]
+success_symbol = '[›](white)'
+error_symbol = '[›](red)'
+
+[fill]
+symbol = ' '
+
+[directory]
+read_only = "󰉐 "
+truncation_length = 10
+truncate_to_repo = true
+truncation_symbol = '  '
+style = "none"
+#home_symbol = "󰥛"
+home_symbol = "~"
+use_logical_path = true 
+format = "$path"
+
+[directory.substitutions]
+'/'=' ›   '
+
+[cmd_duration]
+show_milliseconds = false
+disabled = false
+format = "󰚭 $duration"
+show_notifications = false
+
+[sudo]
+symbol = '󰋙 '
+format = "$symbol(white)"
+disabled = false
+
+[nodejs]
+symbol = ' '
+version_format = 'v${raw}'
+format = '$symbol$version(white) '
+
+[package]
+symbol = ' '
+version_format = 'v${raw}'
+format = '$symbol$version(white) '
+
+[bun]
+symbol = ' '
+version_format = 'v${raw}'
+format = '$symbol$version(white) '
+
+[lua]
+symbol = ' '
+version_format = 'v${raw}'
+format = '$symbol$version(white) '
+
+[custom.divider]
+description = "test for a divider"
+require_repo = true
+when = true
+command = 'echo "|"'
+format = "( $output )"
+
+[custom.angular]
+description = 'angular version support'
+require_repo = true
+when = """
+grep -q '"@angular/core"' package.json && exit 0 || exit 1
+"""
+shell = ["bash", "--noprofile", "--norc"]
+command = """
+cat package.json | grep '"@angular/core"' | awk -F: '{ gsub(/[^0-9.]/, "", $2); print $2 }'
+"""
+format = "( v$output)"
+
+[git_status]
+format = '[( $all_status)](green)'
+
+[git_state]
+format = '([$state( $progress_current/$progress_total)](white))'
+
+[git_branch]
+symbol = "on "
+format = '($symbol $branch )'
+
+[git_commit]
+format = "[ $hash  $tag](white)"
+
+[custom.giturl]
+# disabled = true
+description = "Display symbol for remote Git server"
+command = """
+GIT_REMOTE=$(git ls-remote --get-url 2> /dev/null)
+REMOTE_HOST=$(echo "$GIT_REMOTE" | awk -F'[@:/]' '{print $(NF-1)}' | tr '[:upper:]' '[:lower:]')
+
+case "$REMOTE_HOST" in
+    *github*)     SYMBOL=" " ;;
+    *gitlab*)     SYMBOL=" " ;;
+    *bitbucket*)  SYMBOL=" " ;;
+    *git*)        SYMBOL=" " ;;  # catch-all for anything git-related
+    *)            SYMBOL=" " ;;  # generic VCS symbol
+esac
+
+echo "$SYMBOL"
+"""
+require_repo = true 
+when = true
+shell = ["bash", "--noprofile", "--norc"]
+format = "(at $output)"

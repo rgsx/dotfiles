@@ -1,0 +1,34 @@
+# Keybindings
+bindkey -e
+bindkey '^p' history-search-backward
+bindkey '^n' history-search-forward
+bindkey '^[w' kill-region
+
+# History
+HISTSIZE=5000
+HISTFILE=~/.zsh_history
+SAVEHIST=$HISTSIZE
+HISTDUP=erase
+setopt appendhistory
+setopt sharehistory
+setopt hist_ignore_space
+setopt hist_ignore_all_dups
+setopt hist_save_no_dups
+setopt hist_ignore_dups
+setopt hist_find_no_dups
+setopt autocd
+
+# Sources
+source "$XDG_CONFIG_HOME/zsh/prompt.zsh"
+source "$XDG_CONFIG_HOME/zsh/plugins.zsh"
+source "$XDG_CONFIG_HOME/zsh/aliases.zsh"
+source "$XDG_CONFIG_HOME/zsh/functions.zsh"
+
+# Shell integrations
+eval "$(/opt/homebrew/bin/brew shellenv)"
+eval "$(fzf --zsh)"
+eval "$(zoxide init --cmd cd zsh)"
+eval "$(starship init zsh)"
+
+# Load Angular CLI autocompletion.
+source <(ng completion script)

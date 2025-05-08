@@ -1,0 +1,54 @@
+macos-titlebar-style = transparent
+theme = catppuccin-macchiato
+quit-after-last-window-closed = true
+window-width = 90
+window-height = 28
+window-padding-color = extend
+window-padding-y = 8 
+window-padding-x = 5
+window-padding-balance = true
+font-size = 14
+
+font-family = "Monaspace Neon Var"
+font-style = "Regular"
+font-style-bold = "Bold"
+
+font-family-italic = "Monaspace Radon Var"
+font-style-italic = "Medium Italic"
+font-family-bold-italic = "Monaspace Radon Var"
+font-style-bold-italic = "Bold Italic"
+
+window-subtitle = false
+macos-titlebar-proxy-icon = hidden
+
+macos-icon = glass 
+
+font-feature = +liga
+
+adjust-underline-position = 4
+adjust-underline-thickness = 1
+adjust-strikethrough-position = 0
+adjust-strikethrough-thickness = 1
+adjust-cursor-thickness = 5
+adjust-cursor-height = -2
+
+cursor-color = #cdd6f4
+cursor-style = underline
+shell-integration-features = no-cursor
+mouse-hide-while-typing = true
+
+selection-background = #cdd6f4
+selection-foreground = #1e1e2e
+selection-invert-fg-bg = true
+
+mouse-scroll-multiplier = 2
+background-opacity = 1
+background-blur = false
+
+window-save-state = always
+window-step-resize = true
+resize-overlay = always
+macos-auto-secure-input = true
+macos-secure-input-indication = false
+auto-update = check
+auto-update-channel = stable

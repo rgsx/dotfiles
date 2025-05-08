@@ -1,0 +1,134 @@
+# Kitty Configuration
+
+# Fonts
+font_family postscript_name=MonaspaceNeonVar-Regular
+italic_font postscript_name=MonaspaceRadon-Italic
+
+
+font_size 14.0
+disable_ligatures never
+modify_font underline_position 10
+modify_font underline_thickness 150%
+modify_font strikethrough_thickness 150%
+underline_exclusion 0
+
+# Window
+hide_window_decorations no
+close_on_child_death yes
+macos_quit_when_last_window_closed yes
+confirm_os_window_close -1 count-background
+
+# Cursor
+cursor                  #cdd6f4
+cursor_text_color       background
+cursor_shape_unfocused hollow
+cursor_shape underline
+cursor_blink_interval 0.5 ease-in-out
+cursor_underline_thickness 2.0
+shell_integration enabled no-cursor
+cursor_trail 2
+
+# Scrollback
+scrollback_lines 5000
+scrollback_indicator_opacity 0.6
+scrollback_fill_enlarged_window none
+touch_scroll_multiplier 1.0
+
+# Mouse 
+url_color               #b4befe
+url_prefixes file ftp ftps gemini git gopher http https irc ircs kitty mailto news sftp ssh
+show_hyperlink_targets yes
+underline_hyperlinks hover
+strip_trailing_spaces never
+select_by_word_characters @-./_~?&=%+#
+detect_urls no
+
+# Terminal Bell 
+enable_audio_bell no 
+window_alert_on_bell yes
+bell_on_tab "🔔 "
+
+# Window Layout
+remember_window_size  no
+initial_window_width  90c
+initial_window_height 32c
+window_border_width 0pt
+draw_minimal_borders yes
+window_margin_width 0 
+single_window_margin_width 0 
+window_padding_width 0 
+single_window_padding_width 0 
+placement_strategy center
+active_border_color     #ffffff
+inactive_border_color   #ffffff
+bell_border_color       #ffffff
+inactive_text_alpha 0.6
+hide_window_decorations titlebar-only
+
+# OS Window titlebar colors
+macos_titlebar_color system
+
+# Tab bar
+tab_bar_min_tabs 2
+tab_switch_strategy left
+tab_bar_style powerline
+tab_powerline_style slanted
+tab_title_max_length 16
+tab_bar_margin_width 0.0
+tab_bar_align left
+tab_bar_background none
+active_tab_font_style   normal
+inactive_tab_font_style normal
+tab_bar_margin_height 0.0 0.0
+active_tab_foreground   #11111b
+active_tab_background   #585b70
+inactive_tab_foreground #585b70
+inactive_tab_background #11111b
+
+# Color Scheme
+foreground              #cdd6f4
+background              #11111b
+selection_foreground    #1e1e2e
+selection_background    #bac2de
+
+# Colors for marks (marked text in the terminal)
+mark1_foreground #1e1e2e
+mark1_background #b4befe
+mark2_foreground #1e1e2e
+mark2_background #cba6f7
+mark3_foreground #1e1e2e
+mark3_background #74c7ec
+
+# The 16 terminal colors
+
+# black
+color0 #45475a
+color8 #585b70
+
+# red
+color1 #f38ba8
+color9 #f38ba8
+
+# green
+color2  #a6e3a1
+color10 #a6e3a1
+
+# yellow
+color3  #f9e2af
+color11 #f9e2af
+
+# blue
+color4  #89b4fa
+color12 #89b4fa
+
+# magenta
+color5  #f5c2e7
+color13 #f5c2e7
+
+# cyan
+color6  #94e2d5
+color14 #94e2d5
+
+# white
+color7  #bac2de
+color15 #a6adc8
