@@ -4,6 +4,7 @@ alias ls='ls --color'
 alias vim='nvim'
 alias rm="safe-rm"
 alias colours='msgcat --color=test'
+alias unquarantine='xattr -d com.apple.quarantine'
 alias edit="$EDITOR"
 alias configs="cd $XDG_CONFIG_HOME"
 alias starship-config="edit $STARSHIP_CONFIG"
