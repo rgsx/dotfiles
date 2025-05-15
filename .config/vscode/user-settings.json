@@ -209,7 +209,7 @@
 	"scss.lint.fontFaceProperties": "error",
 	"scss.lint.unknownAtRules": "ignore",
 	"terminal.integrated.enableMultiLinePasteWarning": "never",
-	"terminal.integrated.fontFamily": "Monaspace Neon Var",
+	"terminal.integrated.fontFamily": "Monaspace Neon",
 	"terminal.integrated.fontSize": 14,
 	"terminal.integrated.fontWeight": 400,
 	"terminal.integrated.gpuAcceleration": "on",
@@ -242,5 +242,8 @@
 	},
 	"[sass]": {
 		"editor.defaultFormatter": "syler.sass-indented"
+	},
+	"[shellscript]": {
+		"editor.defaultFormatter": "foxundermoon.shell-format"
 	}
 }

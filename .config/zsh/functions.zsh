@@ -17,7 +17,36 @@ dirsize() {
   fi | sort -hr
 }
 
-brewup () {
+list-tree() {
+  tree -a --ignore-case -A
+}
+
+youtube() {
+  for url in "$@"; do
+
+    #output="$HOME/downloads/%(id)s.%(ext)s"
+    output="$HOME/downloads/↪ Terminal/%(id)s.%(ext)s"
+    sort="fps:60,res:1080,hdr:12"
+    format='bv*[ext=mp4][vcodec~="^((he|a)vc|h26[45])"]+ba[ext=m4a]/b[ext=mp4]/bv*+ba/b'
+
+    yt-dlp --quiet --progress --console-title --no-config-locations --trim-filenames 128 --force-overwrites --concurrent-fragments 2 --restrict-filenames --cookies-from-browser firefox --no-warnings $url --format $format --format-sort $sort --output $output
+
+  done
+  echo "Done"
+}
+
+instagram() {
+  for url in "$@"; do
+
+    output="$HOME/downloads/↪ Terminal/%(id)s.%(ext)s"
+
+    yt-dlp --quiet --progress --console-title --no-config-locations --trim-filenames 128 --force-overwrites --concurrent-fragments 2 --restrict-filenames --cookies-from-browser firefox --no-warnings $url --format 'bv*+ba/b' --output $output
+
+  done
+  echo "Done"
+}
+
+brewup() {
   # Colours
   local red="\033[0;31m"
   local green="\033[0;32m"
@@ -67,6 +96,5 @@ brewup () {
   run_step "Saving Brewfile" \
     brew bundle dump --describe --file="$BUNDLE_PATH" --force
 
-  echo "${green} Brew complete${reset}"
+  echo "${green}Brew complete  ${reset}"
 }
-
