@@ -57,7 +57,7 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 #   prints a clear warning, so you can decide whether you want to run `nvm install`.
 #
 # - If no .nvmrc is found, it does `nvm use default`.
-# 
+#
 # Recommended: leave your default as something generic,
 # e.g. do `nvm alias default stable`
 ####
@@ -125,6 +125,6 @@ auto-switch-node-version() {
 }
 
 # Run the above function in ZSH whenever you change directory
-autoload -U add-zsh-hook
-add-zsh-hook chpwd auto-switch-node-version
-auto-switch-node-version
+#autoload -U add-zsh-hook
+#add-zsh-hook chpwd auto-switch-node-version
+#auto-switch-node-version
