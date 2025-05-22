@@ -8,6 +8,7 @@
 	ui = auto
 [core]
 	editor = nvim
+	excludesfile = /Users/robert/.gitignore
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f

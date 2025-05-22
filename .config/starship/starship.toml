@@ -22,7 +22,7 @@ symbol = ' '
 
 [directory]
 read_only = "󰉐 "
-truncation_length = 10
+truncation_length = 4
 truncate_to_repo = true
 truncation_symbol = '  '
 style = "none"
@@ -46,7 +46,7 @@ format = "$symbol(white)"
 disabled = false
 
 [nodejs]
-symbol = ' '
+symbol = '󰎙 '
 version_format = 'v${raw}'
 format = '$symbol$version(white) '
 
@@ -65,6 +65,11 @@ symbol = ' '
 version_format = 'v${raw}'
 format = '$symbol$version(white) '
 
+[python]
+symbol=' '
+version_format='v${raw}'
+format='$symbol$version(white) '
+
 [custom.divider]
 description = "test for a divider"
 require_repo = true
@@ -82,7 +87,7 @@ shell = ["bash", "--noprofile", "--norc"]
 command = """
 cat package.json | grep '"@angular/core"' | awk -F: '{ gsub(/[^0-9.]/, "", $2); print $2 }'
 """
-format = "( v$output)"
+format = "(󰚲 v$output )"
 
 [git_status]
 format = '[( $all_status)](green)'

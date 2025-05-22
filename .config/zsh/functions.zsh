@@ -37,13 +37,16 @@ youtube() {
 
 instagram() {
   for url in "$@"; do
+    output_dir="$HOME/downloads"
+    output_file="$output_dir/%(id)s.%(ext)s"
+    download_file=$(yt-dlp --quiet --progress --console-title --no-config-locations --trim-filenames 128 --force-overwrites --concurrent-fragments 2 --restrict-filenames --cookies-from-browser firefox --no-warnings $url --format 'bv*+ba/b' --output $output_file --print after_move:filepath)
+    to_convert="$(basename "$download_file")"
 
-    output="$HOME/downloads/↪ Terminal/%(id)s.%(ext)s"
+    ffmpeg -i "$output_dir/$to_convert" -c:v libx265 -tag:v hvc1 -crf 20 -pix_fmt yuv420p10le -c:a aac -b:a 160k "$output_dir/${to_convert%.*}-converted.mp4" > /dev/null 2>&1
 
-    yt-dlp --quiet --progress --console-title --no-config-locations --trim-filenames 128 --force-overwrites --concurrent-fragments 2 --restrict-filenames --cookies-from-browser firefox --no-warnings $url --format 'bv*+ba/b' --output $output
+    echo "Done "
 
   done
-  echo "Done"
 }
 
 brewup() {

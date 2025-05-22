@@ -1,4 +1,8 @@
 tap "oven-sh/bun"
+# Display graphs and colors of file system space/usage
+brew "dfc"
+# Utility to configure multi-display resolutions and arrangements
+brew "displayplacer"
 # Modern, maintained replacement for ls
 brew "eza"
 # Play, record, convert, and stream audio and video
@@ -9,6 +13,8 @@ brew "fzf"
 brew "git"
 # GNU Pretty Good Privacy (PGP) package
 brew "gnupg"
+# Terminal file manager
+brew "lf"
 # Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
 # Pinentry for GPG on Mac

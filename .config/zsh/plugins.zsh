@@ -39,8 +39,8 @@ zinit cdreplay -q
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' menu no
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
-zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza --oneline --long --tree --classify=always --color=auto --icons=always --hyperlink --all --level=1 --sort=type --group-directories-first --git --no-permissions --no-filesize --no-user --no-time $realpath'
+zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'eza --oneline --long --tree --classify=always --color=auto --icons=always --hyperlink --all --level=1 --sort=type --group-directories-first --git --no-permissions --no-filesize --no-user --no-time $realpath'
 
 ####
 # ZSH function to auto-switch to correct Node version
