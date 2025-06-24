@@ -61,7 +61,6 @@
 
 # cask packages
 .cask/
-dist/
 
 # Flycheck
 flycheck_*.el
@@ -218,7 +217,6 @@ out
 
 # Nuxt.js build / generate output
 .nuxt
-dist
 
 # Gatsby files
 .cache/
@@ -334,15 +332,11 @@ tags
 !.vscode/extensions.json
 !.vscode/*.code-snippets
 
-# Local History for Visual Studio Code
-.history/
-
 # Built Visual Studio Code Extensions
 *.vsix
 
 ### VisualStudioCode Patch ###
 # Ignore all local history of files
-.history
 .ionide
 
 ### Windows ###
@@ -382,15 +376,10 @@ tramp
 -angular/*
 .scripts
 .scripts/*
-.husky
-.husky/*
-
-dist
-dist/*
 
 .env.development
 .env.production
 .env.tests
-#!
-.\#*
 
+.husky
+.husky/

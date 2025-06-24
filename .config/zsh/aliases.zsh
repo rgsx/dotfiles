@@ -16,7 +16,7 @@ alias zsh-functions="edit $XDG_CONFIG_HOME/zsh/functions.zsh"
 alias zsh-plugins="edit $XDG_CONFIG_HOME/zsh/plugins.zsh"
 alias zsh-env="edit $XDG_CONFIG_HOME/zsh/zshenv"
 
-alias list="eza --oneline --long --tree --classify=always --color=auto --icons=always --hyperlink --all --level=1 --sort=type --group-directories-first --git --no-permissions --no-filesize --no-user --no-time"
+alias list="eza --oneline --long --tree --classify=always --color=auto --icons=always --hyperlink --all --level=0 --sort=type --group-directories-first --git --no-permissions --no-filesize --no-user --no-time"
 
 alias git-sign-on="git config commit.gpgsign true && git config user.signingkey 40D24CB579AE8FE8" #turning on signing commits by repo
 
