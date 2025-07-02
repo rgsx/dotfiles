@@ -27,3 +27,5 @@ echo "Wi-Fi:" && ifconfig en0 | awk "/ether/ {print \$2}";
 echo "LAN:" && ifconfig en1 | awk "/ether/ {print \$2}"'
 
 alias getHostname='echo "Hostname:" && hostname'
+
+alias symlinkJava="sudo ln -sfn /opt/homebrew/opt/openjdk/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk.jdk"

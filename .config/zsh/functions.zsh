@@ -24,25 +24,41 @@ list-tree() {
 youtube() {
   for url in "$@"; do
 
-    #output="$HOME/downloads/%(id)s.%(ext)s"
-    output="$HOME/downloads/↪ Terminal/%(id)s.%(ext)s"
+    output_name="%(webpage_url_domain)s/%(channel,creator,uploader)s | %(title.0:48)s | %(id.0:16)s.%(ext)s"
+    output_dir="$HOME/downloads/↪ Terminal/"
     sort="fps:60,res:1080,hdr:12"
     format='bv*[ext=mp4][vcodec~="^((he|a)vc|h26[45])"]+ba[ext=m4a]/b[ext=mp4]/bv*+ba/b'
-
-    yt-dlp --quiet --progress --console-title --no-config-locations --trim-filenames 128 --force-overwrites --concurrent-fragments 2 --restrict-filenames --cookies-from-browser firefox --no-warnings $url --format $format --format-sort $sort --output $output
+    #--trim-filenames 128
+    yt-dlp --quiet --progress --console-title --no-config-locations --force-overwrites --concurrent-fragments 2 --restrict-filenames --cookies-from-browser firefox --no-warnings --add-metadata --compat-options embed-metadata $url --format $format --format-sort $sort --output "$output_dir$output_name"
 
   done
   echo "Done"
 }
 
+youtube-batch() {
+
+  output_name="%(webpage_url_domain)s/%(channel,creator,uploader)s | %(title.0:48)s | %(id.0:16)s.%(ext)s"
+  output_dir="$HOME/downloads/↪ Terminal/"
+  sort="fps:60,res:1080,hdr:12"
+  format='bv*[ext=mp4][vcodec~="^((he|a)vc|h26[45])"]+ba[ext=m4a]/b[ext=mp4]/bv*+ba/b'
+
+   yt-dlp --quiet --progress --console-title --no-config-locations --force-overwrites --concurrent-fragments 2 --restrict-filenames --cookies-from-browser firefox --no-warnings --add-metadata --compat-options embed-metadata --batch-file $1 --format $format --format-sort $sort --output "$output_dir$output_name"
+
+}
+
 instagram() {
   for url in "$@"; do
-    output_dir="$HOME/downloads"
-    output_file="$output_dir/%(id)s.%(ext)s"
-    download_file=$(yt-dlp --quiet --progress --console-title --no-config-locations --trim-filenames 128 --force-overwrites --concurrent-fragments 2 --restrict-filenames --cookies-from-browser firefox --no-warnings $url --format 'bv*+ba/b' --output $output_file --print after_move:filepath)
+
+    output_file="%(channel,creator,uploader)s | %(title.0:48)s | %(id.0:16)s.%(ext)s"
+    output_dir="$HOME/downloads/↪ Terminal/instagram.com/"
+
+    download_file=$(yt-dlp --quiet --progress --console-title --no-config-locations --force-overwrites --concurrent-fragments 8 --restrict-filenames --cookies-from-browser firefox --no-warnings $url --format 'bv*+ba/b' --output "$output_dir$output_file" --print after_move:filepath)
+
     to_convert="$(basename "$download_file")"
 
-    ffmpeg -i "$output_dir/$to_convert" -c:v libx265 -tag:v hvc1 -crf 20 -pix_fmt yuv420p10le -c:a aac -b:a 160k "$output_dir/${to_convert%.*}-converted.mp4" > /dev/null 2>&1
+    #echo $to_convert
+
+    ffmpeg -i "$output_dir$to_convert" -c:v libx265 -tag:v hvc1 -crf 20 -pix_fmt yuv420p10le -c:a aac -b:a 160k "$output_dir${to_convert%.*} | converted.mp4" > /dev/null 2>&1
 
     echo "Done "
 
