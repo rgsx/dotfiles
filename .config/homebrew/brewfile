@@ -3,6 +3,8 @@ tap "oven-sh/bun"
 brew "dfc"
 # Utility to configure multi-display resolutions and arrangements
 brew "displayplacer"
+# Select default apps for documents and URL schemes on macOS
+brew "duti"
 # Modern, maintained replacement for ls
 brew "eza"
 # Play, record, convert, and stream audio and video
@@ -21,6 +23,8 @@ brew "neovim"
 brew "pinentry-mac"
 # Monitor data's progress through a pipe
 brew "pv"
+# Command-line YAML and XML processor that wraps jq
+brew "python-yq"
 # Wraps rm to prevent dangerous deletion of files
 brew "safe-rm"
 # Cross-shell prompt for astronauts

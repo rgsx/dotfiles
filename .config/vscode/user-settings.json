@@ -246,5 +246,8 @@
 	"[shellscript]": {
 		"editor.defaultFormatter": "foxundermoon.shell-format"
 	},
-	"github.copilot.nextEditSuggestions.enabled": true
+	"github.copilot.nextEditSuggestions.enabled": true,
+	"[properties]": {
+		"editor.defaultFormatter": "foxundermoon.shell-format"
+	}
 }

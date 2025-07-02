@@ -101,3 +101,8 @@ brewup() {
 
   echo "${green}Brew complete  ${reset}"
 }
+
+setDevFileTypes() {
+curl "https://raw.githubusercontent.com/github/linguist/master/lib/linguist/languages.yml" | yq -r "to_entries | (map(.value.extensions) | flatten) - [null] | unique | .[]" | xargs -L 1 -I "{}" duti -s com.microsoft.VSCode {} all 2>&1
+echo "Done  "
+}
