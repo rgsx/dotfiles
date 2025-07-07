@@ -1,4 +1,6 @@
 tap "oven-sh/bun"
+# Clone of cat(1) with syntax highlighting and Git integration
+brew "bat"
 # Display graphs and colors of file system space/usage
 brew "dfc"
 # Utility to configure multi-display resolutions and arrangements
@@ -17,6 +19,10 @@ brew "git"
 brew "gnupg"
 # Terminal file manager
 brew "lf"
+# Development kit for the Java programming language
+brew "openjdk"
+# Java-based project management
+brew "maven"
 # Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
 # Pinentry for GPG on Mac
