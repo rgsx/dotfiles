@@ -67,7 +67,7 @@
 	"editor.lineHeight": 0,
 	"editor.linkedEditing": true,
 	"editor.maxTokenizationLineLength": 20000,
-	"editor.minimap.autohide": true,
+	"editor.minimap.autohide": "mouseover",
 	"editor.minimap.maxColumn": 80,
 	"editor.minimap.renderCharacters": false,
 	"editor.minimap.scale": 1,
@@ -244,7 +244,7 @@
 		"editor.defaultFormatter": "syler.sass-indented"
 	},
 	"[shellscript]": {
-		"editor.defaultFormatter": "foxundermoon.shell-format"
+		"editor.defaultFormatter": "mkhl.shfmt"
 	},
 	"github.copilot.nextEditSuggestions.enabled": true,
 	"[properties]": {
@@ -252,5 +252,6 @@
 	},
 	"[ignore]": {
 		"editor.defaultFormatter": "foxundermoon.shell-format"
-	}
+	},
+	"diffEditor.ignoreTrimWhitespace": false
 }

@@ -45,6 +45,7 @@ brew "yt-dlp"
 brew "zoxide"
 # Incredibly fast JavaScript runtime, bundler, transpiler and package manager - all in one.
 brew "oven-sh/bun/bun"
+cask "font-jetbrains-mono-nerd-font"
 # Thumbnails, static previews, cover art and metadata for video files
 cask "qlvideo"
 # Open-source code editor

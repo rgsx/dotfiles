@@ -45,11 +45,13 @@
 	"security.workspace.trust.banner": "always",
 	"security.workspace.trust.enabled": false,
 	"update.enableWindowsBackgroundUpdates": false,
-	"update.mode": "none",
+	"update.mode": "default",
 	"update.showReleaseNotes": false,
 	"window.menuBarVisibility": "toggle",
 	"window.titleBarStyle": "custom",
 	"window.newWindowProfile": "MacOS",
 	"security.workspace.trust.untrustedFiles": "open",
-	"window.newWindowDimensions": "fullscreen"
+	"window.newWindowDimensions": "fullscreen",
+	"workbench.enableExperiments": false,
+	"telemetry.telemetryLevel": "off"
 }
