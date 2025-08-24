@@ -1,5 +1,5 @@
 macos-titlebar-style = transparent
-theme = catppuccin-macchiato
+theme = catppuccin-mocha
 quit-after-last-window-closed = true
 window-width = 120
 window-height = 32
@@ -53,4 +53,4 @@ macos-secure-input-indication = false
 auto-update = check
 auto-update-channel = stable
 
-custom-shader = ~/.config/ghostty/shader.glsl
+#custom-shader = ~/.config/ghostty/shader.glsl

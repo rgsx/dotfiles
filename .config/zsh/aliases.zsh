@@ -6,11 +6,11 @@ alias ok="exit"
 alias ls='ls --color'
 ## Vim > Nvim > NVChad (all the same)
 alias vim='nvim'
-## Safe RM, all gets deleted to trash
-alias rm="safe-rm"
+## Safe rm deletion, all gets deleted to trash
+alias rm="delete"
 ## For terminal color testing
 alias colours='msgcat --color=test'
-## Remove app from Quarantine: "unquarantine ~/Applications/App.app"
+## Remove app from Quarantine: "unquarantine App.app"
 alias unquarantine='xattr -d com.apple.quarantine'
 ## Call for default editor
 alias edit="$EDITOR"

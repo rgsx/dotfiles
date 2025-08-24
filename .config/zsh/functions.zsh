@@ -6,9 +6,20 @@ folder() {
   cd $1
 }
 
+## Safe delete with trash
 delete() {
-  ## Safe delete with trash
-  trash --stopOnError $@
+  local args=()
+  for arg in "$@"; do
+    case "$arg" in
+      -r|-f|-rf|-fr) ;;   # ignore these flags
+      *) args+=("$arg") ;;
+    esac
+  done
+  if [ ${#args[@]} -eq 0 ]; then
+    echo "delete: missing operand" >&2
+    return 1
+  fi
+  trash --stopOnError "${args[@]}";
 }
 
 dirsize() {
