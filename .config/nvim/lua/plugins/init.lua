@@ -1,4 +1,5 @@
 return {
+{ 'echasnovski/mini.nvim', version = '*' },
   {
     "stevearc/conform.nvim",
     -- event = 'BufWritePre', -- uncomment for format on save

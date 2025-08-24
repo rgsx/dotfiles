@@ -4,6 +4,8 @@
 alias ok="exit"
 ## Colored default for ls
 alias ls='ls --color'
+## List all depths alphabetically in recursive tree view
+alias list-tree='tree -a --ignore-case -A'
 ## Vim > Nvim > NVChad (all the same)
 alias vim='nvim'
 ## Safe rm deletion, all gets deleted to trash
@@ -14,26 +16,8 @@ alias colours='msgcat --color=test'
 alias unquarantine='xattr -d com.apple.quarantine'
 ## Call for default editor
 alias edit="$EDITOR"
-## Quick call to configs folder/repo
-alias configs="cd $XDG_CONFIG_HOME"
-## Quick call to edit Starship configuration
-alias starship-config="edit $STARSHIP_CONFIG"
-## Quick call to edit ZSH configuration 
-alias zsh-config="edit $XDG_CONFIG_HOME/zsh/zshrc"
-## Quick call to edit Kitty configuration 
-alias kitty-config="edit $XDG_CONFIG_HOME/kitty/kitty.conf"
-## Quick call to edit Ghostty configuration
-alias ghostty-config="edit $XDG_CONFIG_HOME/ghostty/config"
-## Quick call to edit ZSH Aliases 
-alias zsh-aliases="edit $XDG_CONFIG_HOME/zsh/aliases.zsh"
-## Quick call to edit ZSH Functions 
-alias zsh-functions="edit $XDG_CONFIG_HOME/zsh/functions.zsh"
-## Quick call to edit ZSH Plugins 
-alias zsh-plugins="edit $XDG_CONFIG_HOME/zsh/plugins.zsh"
-## Quick call to edit ZSH Enviroment 
-alias zsh-env="edit $XDG_CONFIG_HOME/zsh/zshenv"
-## Fuzzy finder for code preview (Needs work)
-alias nf='fzf -m --preview="bat --color=always {}" --bind "enter:become(nvim {+})"'
+## Quick call to edit configs folder/repo
+alias configs="cd $XDG_CONFIG_HOME && edit ."
 ## Tree view for current folder with all info
 alias list="eza --oneline --long --tree --classify=always --color=auto --icons=always --hyperlink --all --list-dirs --level=1 --sort=type --classify=always --group-directories-first --git --no-permissions --no-filesize --no-user --no-time ."
 ## Turn on signed commits by repo

@@ -53,4 +53,4 @@ macos-secure-input-indication = false
 auto-update = check
 auto-update-channel = stable
 
-#custom-shader = ~/.config/ghostty/shader.glsl
+custom-shader = ~/.config/ghostty/shader.glsl
