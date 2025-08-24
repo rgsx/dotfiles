@@ -42,7 +42,7 @@ zstyle ':completion:*' menu no
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza --oneline --long --tree --classify=always --color=auto --icons=always --hyperlink --all --level=1 --sort=type --group-directories-first --git --no-permissions --no-filesize --no-user --no-time $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'eza --oneline --long --tree --classify=always --color=auto --icons=always --hyperlink --all --level=1 --sort=type --group-directories-first --git --no-permissions --no-filesize --no-user --no-time $realpath'
 
-####
+####  DISABLED FOR VOLTA
 # ZSH function to auto-switch to correct Node version
 #   https://gist.github.com/callumlocke/30990e247e52ab6ac1aa98e5f0e5bbf5
 #

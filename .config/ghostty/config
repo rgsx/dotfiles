@@ -1,13 +1,13 @@
 macos-titlebar-style = transparent
 theme = catppuccin-macchiato
 quit-after-last-window-closed = true
-window-width = 90
-window-height = 28
+window-width = 120
+window-height = 32
 window-padding-color = extend
 window-padding-y = 8 
 window-padding-x = 5
 window-padding-balance = true
-font-size = 14
+font-size = 16
 
 font-family = "Monaspace Neon Var"
 font-style = "Regular"
@@ -52,3 +52,5 @@ macos-auto-secure-input = true
 macos-secure-input-indication = false
 auto-update = check
 auto-update-channel = stable
+
+custom-shader = ~/.config/ghostty/shader.glsl
