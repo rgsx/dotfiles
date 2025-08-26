@@ -6,6 +6,16 @@ folder() {
   cd $1
 }
 
+## Creates a folder for each file passed with it's name and then moves it
+mkdir-move() {
+  for file in "$@"; do
+    [ -f "$file" ] || continue  # skip if not a file
+    dirname="${file%.*}"
+    mkdir -p -- "$dirname"
+    mv -- "$file" "$dirname"/
+  done
+}
+
 ## Safe delete with trash
 delete() {
   local args=()
