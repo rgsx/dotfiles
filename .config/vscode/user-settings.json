@@ -253,5 +253,9 @@
 	"[ignore]": {
 		"editor.defaultFormatter": "foxundermoon.shell-format"
 	},
-	"diffEditor.ignoreTrimWhitespace": false
+	"diffEditor.ignoreTrimWhitespace": false,
+	"sonarlint.focusOnNewCode": false,
+	"[toml]": {
+		"editor.defaultFormatter": "tamasfe.even-better-toml"
+	}
 }

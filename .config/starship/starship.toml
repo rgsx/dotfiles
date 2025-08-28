@@ -8,7 +8,7 @@ format = """
 ($cmd_duration\n)\
 ($directory)($fill)\
 (($git_branch)($git_commit)(${custom.giturl})($git_state)($git_status))\
-(${custom.divider})(($bun)($package)($nodejs)(${custom.angular})($lua)($all))\
+((${custom.divider})($bun)($package)($nodejs)(${custom.angular})($lua)($all))\
 (($sudo)$character)
 """
 continuation_prompt = '󰄾 '
@@ -24,15 +24,14 @@ symbol = ' '
 read_only = "󰉐 "
 truncation_length = 4
 truncate_to_repo = true
-truncation_symbol = '  '
+truncation_symbol = '  '
 style = "none"
-#home_symbol = "󰥛"
 home_symbol = "~"
-use_logical_path = true 
+use_logical_path = true
 format = "$path"
 
 [directory.substitutions]
-'/'=' ›   '
+'/' = ' ›   '
 
 [cmd_duration]
 show_milliseconds = false
@@ -60,22 +59,102 @@ symbol = ' '
 version_format = 'v${raw}'
 format = '$symbol$version(white) '
 
+[gcloud]
+symbol = ' '
+format = 'on [$symbol$account(@$domain)(\($project\))](white bold) '
+
+[aws]
+symbol = ' '
+
+[azure]
+symbol = ' '
+
+[docker_context]
+symbol = '󰡨 '
+only_with_files = true
+format = '[$symbol$context](white bold)'
+
+[openstack]
+symbol = ' '
+format = 'on [$symbol$account(@$domain)(\($project\))](white bold)'
+
+[java]
+symbol = ' '
+version_format = 'v${raw}'
+format = '$symbol$version(white)'
+
+[kubernetes]
+symbol = '󱃾 '
+
+[container]
+symbol = ' '
+
+[c]
+symbol = ' '
+version_format = 'v${raw}'
+format = '$symbol$version(white)'
+
+[cpp]
+symbol = ' '
+version_format = 'v${raw}'
+format = '$symbol$version(white)'
+
 [lua]
 symbol = ' '
 version_format = 'v${raw}'
 format = '$symbol$version(white) '
 
+[perl]
+symbol = ' '
+version_format = 'v${raw}'
+format = '$symbol$version(white)'
+
+[php]
+symbol = ' '
+version_format = 'v${raw}'
+format = '$symbol$version(white)'
+
+[ruby]
+symbol = ' '
+version_format = 'v${raw}'
+format = '$symbol$version(white)'
+
+[swift]
+symbol = ' '
+version_format = 'v${raw}'
+format = '$symbol$version(white)'
+
+[dart]
+symbol = '  '
+version_format = 'v${raw}'
+format = '$symbol$version(white)'
+
+[golang]
+symbol = '󰟓 '
+version_format = 'v${raw}'
+format = '$symbol$version(white) '
+
+[rust]
+symbol = ' '
+version_format = 'v${raw}'
+format = '$symbol$version(white) '
+
 [python]
-symbol=' '
-version_format='v${raw}'
-format='$symbol$version(white) '
+symbol = ' '
+version_format = 'v${raw}'
+format = '$symbol$version(white) '
+
+[cmake]
+symbol = ' '
+version_format = 'v${raw}'
+format = '$symbol$version(white)'
 
 [custom.divider]
 description = "test for a divider"
 require_repo = true
-when = true
 command = 'echo "|"'
 format = "( $output )"
+detect_files = ["package.json", "angular.json", "bun.lockb", "node_modules"]
 
 [custom.angular]
 description = 'angular version support'
@@ -90,14 +169,14 @@ cat package.json | grep '"@angular/core"' | awk -F: '{ gsub(/[^0-9.]/, "", $2); 
 format = "(󰚲 v$output )"
 
 [git_status]
-format = '[( $all_status)](green)'
+format = '[($all_status)](bold)'
 
 [git_state]
 format = '([$state( $progress_current/$progress_total)](white))'
 
 [git_branch]
-symbol = "on "
-format = '($symbol $branch )'
+symbol = " "
+format = '(on [$branch ](bold)$symbol)'
 
 [git_commit]
 format = "[ $hash  $tag](white)"
@@ -106,20 +185,83 @@ format = "[ $hash  $tag](white)"
 # disabled = true
 description = "Display symbol for remote Git server"
 command = """
-GIT_REMOTE=$(git ls-remote --get-url 2> /dev/null)
-REMOTE_HOST=$(echo "$GIT_REMOTE" | awk -F'[@:/]' '{print $(NF-1)}' | tr '[:upper:]' '[:lower:]')
+set -e
 
-case "$REMOTE_HOST" in
-    *github*)     SYMBOL=" " ;;
-    *gitlab*)     SYMBOL=" " ;;
-    *bitbucket*)  SYMBOL=" " ;;
-    *git*)        SYMBOL=" " ;;  # catch-all for anything git-related
-    *)            SYMBOL=" " ;;  # generic VCS symbol
+cache_file="/tmp/starship_giturl_$(git rev-parse --git-dir 2>/dev/null | tr '/' '_').cache"
+if [ -f "$cache_file" ] && [ "$(find "$cache_file" -mmin -1 2>/dev/null)" ]; then
+  cat "$cache_file"
+  exit 0
+fi
+
+# Prefer the 'origin' remote; fall back to any configured URL.
+url="$(git config --get remote.origin.url 2>/dev/null || git ls-remote --get-url 2>/dev/null || true)"
+[ -z "$url" ] && exit 1
+
+# Extract host from SSH/HTTPS/CodeCommit/scp-like URLs
+if printf %s "$url" | grep -qE '^[a-z]+://'; then
+  host="$(printf %s "$url" | sed -E 's|^[a-z]+://([^/]+)/.*|\\1|')"
+else
+  # scp-like (git@host:owner/repo.git) or similar
+  host="$(printf %s "$url" | sed -E 's|^[^@]+@([^:/]+)[:/].*|\\1|')"
+fi
+host="$(printf %s "$host" | tr '[:upper:]' '[:lower:]')"
+
+# Default generic VCS glyph
+symbol=' '
+remote_host=''
+
+case "$host" in
+  github.com|*.github.com|github.*)
+    symbol=' '
+    remote_host='GitHub '
+    ;;
+  gitlab.com|*.gitlab.com|gitlab.*)
+    symbol=' '
+    remote_host='GitLab '
+    ;;
+  bitbucket.org|*.bitbucket.*)
+    symbol=' '
+    remote_host='Bitbucket '
+    ;;
+  codeberg.org|*.codeberg.*|gitea.*|*.gitea.*|forgejo.*|*.forgejo.*)
+    # Gitea/Forgejo/Codeberg share similar lineage; reuse the Gitea glyph
+    symbol=' '
+    remote_host='Gitea '
+    ;;
+  sr.ht|*.sr.ht|sourcehut.org|*.sourcehut.org)
+    # SourceHut (approximate icon)
+    symbol=' '
+    remote_host='SourceHut '
+    ;;
+  dev.azure.com|*.visualstudio.com|azure.*)
+    # Azure DevOps
+    symbol=' '
+    remote_host='Azure DevOps '
+    ;;
+  codecommit.*.amazonaws.com|*.codecommit.*)
+    # AWS CodeCommit (approximate using AWS glyph)
+    symbol=' '
+    remote_host='AWS CodeCommit '
+    ;;
+  *)
+    # As a fallback, if the host contains 'git', show a generic Git logo
+    case "$host" in
+      *gtec*)
+        symbol=''
+        remote_host='𝗚𝗧𝗘𝗖'
+        ;;
+      *git*)
+        symbol=' '
+        remote_host="$host "
+        ;;
+    esac
+    ;;
 esac
 
-echo "$SYMBOL"
+printf "%s" "$remote_host$symbol"
 """
-require_repo = true 
-when = true
+require_repo = true
 shell = ["bash", "--noprofile", "--norc"]
-format = "(at $output)"
+format = "(at [$output ](bold))"
+detect_files = [".gitignore"]
+detect_folders = [".git"]
