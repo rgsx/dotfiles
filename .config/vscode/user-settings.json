@@ -257,5 +257,8 @@
 	"sonarlint.focusOnNewCode": false,
 	"[toml]": {
 		"editor.defaultFormatter": "tamasfe.even-better-toml"
+	},
+	"[prisma]": {
+		"editor.defaultFormatter": "Prisma.prisma"
 	}
 }
