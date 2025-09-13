@@ -63,6 +63,9 @@
 		},
 		"Web:S6819": {
 			"level": "off"
+		},
+		"Web:S6807": {
+			"level": "off"
 		}
 	}
 }

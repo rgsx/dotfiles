@@ -16,6 +16,12 @@ mkdir-move() {
   done
 }
 
+## Tree view for current folder with all info
+list() {
+   eza --oneline --long --tree --classify=always --color=auto --icons=always --hyperlink --list-dirs --level=1 --sort=type --classify=always --group-directories-first --git --no-permissions --no-filesize --no-user --no-time . $1
+}
+
+
 ## Safe delete with trash
 delete() {
   local args=()

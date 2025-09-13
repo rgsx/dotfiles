@@ -48,14 +48,14 @@
 	],
 	"breadcrumbs.enabled": true,
 	"breadcrumbs.filePath": "off",
-	"chat.editor.fontSize": 14,
+	"chat.editor.fontSize": 16,
 	"css.format.spaceAroundSelectorSeparator": true,
 	"css.lint.fontFaceProperties": "error",
-	"debug.console.fontSize": 14,
+	"debug.console.fontSize": 16,
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
 	"editor.fontFamily": "Monaspace Neon",
 	"editor.fontLigatures": "'calt', 'ss01', 'ss02', 'ss03', 'ss05', 'ss06', 'ss07', 'ss08', 'ss09', 'ss10', 'ss11', 'liga', 'cv01' 2, 'cv31' 1",
-	"editor.fontSize": 14,
+	"editor.fontSize": 16,
 	"editor.fontWeight": 400,
 	"editor.formatOnPaste": true,
 	"editor.formatOnSave": true,
@@ -71,7 +71,7 @@
 	"editor.minimap.maxColumn": 80,
 	"editor.minimap.renderCharacters": false,
 	"editor.minimap.scale": 1,
-	"editor.minimap.sectionHeaderFontSize": 14,
+	"editor.minimap.sectionHeaderFontSize": 16,
 	"editor.minimap.showSlider": "always",
 	"editor.minimap.side": "right",
 	"editor.minimap.size": "proportional",
@@ -94,6 +94,9 @@
 	"editor.wordWrap": "bounded",
 	"editor.wordWrapColumn": 80,
 	"emmet.triggerExpansionOnTab": true,
+	"emmet.includeLanguages": {
+		"postcss": "css"
+	},
 	"errorLens.margin": "8ch",
 	"evenBetterToml.formatter.allowedBlankLines": 2,
 	"explorer.confirmDelete": false,
@@ -132,6 +135,7 @@
 	"git.confirmSync": false,
 	"git.enableSmartCommit": true,
 	"git.replaceTagsWhenPull": true,
+	"github.copilot.nextEditSuggestions.enabled": true,
 	"gitlens.advanced.messages": {
 		"suppressCreatePullRequestPrompt": true
 	},
@@ -144,7 +148,7 @@
 	"liveServer.settings.donotShowInfoMsg": true,
 	"liveServer.settings.donotVerifyTags": true,
 	"liveServer.settings.useLocalIp": true,
-	"path-intellisense.showHiddenFiles": true,
+	"path-intellisense.showHiddenFiles": false,
 	"peacock.affectActivityBar": false,
 	"peacock.affectSashHover": false,
 	"peacock.affectTabActiveBorder": true,
@@ -205,19 +209,30 @@
 	"problems.showCurrentInStatus": true,
 	"redhat.telemetry.enabled": false,
 	"scm.diffDecorations": "gutter",
-	"scm.inputFontSize": 14,
+	"scm.inputFontSize": 16,
 	"scss.lint.fontFaceProperties": "error",
 	"scss.lint.unknownAtRules": "ignore",
+	"sonarlint.disableTelemetry": true,
+	"terminal.integrated.cursorBlinking": true,
+	"terminal.integrated.cursorStyle": "underline",
+	"terminal.integrated.cursorStyleInactive": "none",
+	"terminal.integrated.customGlyphs": true,
 	"terminal.integrated.enableMultiLinePasteWarning": "never",
-	"terminal.integrated.fontFamily": "Monaspace Neon",
-	"terminal.integrated.fontSize": 14,
-	"terminal.integrated.fontWeight": 400,
+	"terminal.integrated.fontFamily": "MonaspiceNe Nerd Font Propo",
+	"terminal.integrated.fontLigatures.enabled": true,
+	"terminal.integrated.fontLigatures.featureSettings": "'calt' on, 'ss01' on, 'ss02' on, 'ss03' on, 'ss05' on, 'ss06' on, 'ss07' on, 'ss08' on, 'ss09' on, 'ss10' on, 'ss11' on, 'liga' on, 'cv01' 2, 'cv31' 1",
+	"terminal.integrated.fontSize": 16,
+	"terminal.integrated.fontWeight": 300,
+	"terminal.integrated.fontWeightBold": "800",
 	"terminal.integrated.gpuAcceleration": "on",
 	"terminal.integrated.letterSpacing": 0,
 	"terminal.integrated.lineHeight": 0,
 	"terminal.integrated.minimumContrastRatio": 1,
-	"terminal.integrated.mouseWheelScrollSensitivity": 4,
+	"terminal.integrated.mouseWheelScrollSensitivity": 10,
+	"terminal.integrated.rescaleOverlappingGlyphs": true,
 	"terminal.integrated.shellIntegration.decorationsEnabled": "gutter",
+	"terminal.integrated.smoothScrolling": true,
+	"terminal.integrated.unicodeVersion": "11",
 	"window.autoDetectColorScheme": true,
 	"window.commandCenter": false,
 	"window.title": "${rootName} ${activeEditorShort} | ${appName}",
@@ -246,19 +261,19 @@
 	"[shellscript]": {
 		"editor.defaultFormatter": "mkhl.shfmt"
 	},
-	"github.copilot.nextEditSuggestions.enabled": true,
 	"[properties]": {
-		"editor.defaultFormatter": "foxundermoon.shell-format"
+		"editor.defaultFormatter": "mkhl.shfmt"
 	},
 	"[ignore]": {
-		"editor.defaultFormatter": "foxundermoon.shell-format"
+		"editor.defaultFormatter": "mkhl.shfmt"
 	},
 	"diffEditor.ignoreTrimWhitespace": false,
-	"sonarlint.focusOnNewCode": false,
+	"sonarlint.focusOnNewCode": true,
 	"[toml]": {
 		"editor.defaultFormatter": "tamasfe.even-better-toml"
 	},
 	"[prisma]": {
 		"editor.defaultFormatter": "Prisma.prisma"
-	}
+	},
+	"workbench.editor.enablePreview": false
 }

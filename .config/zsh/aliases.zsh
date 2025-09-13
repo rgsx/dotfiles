@@ -18,8 +18,6 @@ alias unquarantine='xattr -d com.apple.quarantine'
 alias edit="$EDITOR"
 ## Quick call to edit configs folder/repo
 alias configs="cd $XDG_CONFIG_HOME && edit ."
-## Tree view for current folder with all info
-alias list="eza --oneline --long --tree --classify=always --color=auto --icons=always --hyperlink --all --list-dirs --level=1 --sort=type --classify=always --group-directories-first --git --no-permissions --no-filesize --no-user --no-time ."
 ## Turn on signed commits by repo
 alias git-sign-on="git config commit.gpgsign true && git config user.signingkey 40D24CB579AE8FE8" #turning on signing commits by repo
 ## Turn off signed commits by repo
