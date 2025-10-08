@@ -1,61 +1,69 @@
 {
-	"better-comments.tags": [
-		{
-			"tag": "!",
-			"color": "#f38ba8",
-			"strikethrough": false,
-			"underline": false,
-			"backgroundColor": "transparent",
-			"bold": false,
-			"italic": false
-		},
-		{
-			"tag": "?",
-			"color": "#89b4fa",
-			"strikethrough": false,
-			"underline": false,
-			"backgroundColor": "transparent",
-			"bold": false,
-			"italic": false
-		},
-		{
-			"tag": "//",
-			"color": "#313244",
-			"strikethrough": true,
-			"underline": false,
-			"backgroundColor": "transparent",
-			"bold": false,
-			"italic": false
-		},
-		{
-			"tag": "todo",
-			"color": "#fab387",
-			"strikethrough": false,
-			"underline": false,
-			"backgroundColor": "transparent",
-			"bold": false,
-			"italic": false
-		},
-		{
-			"tag": "*",
-			"color": "#a6e3a1",
-			"strikethrough": false,
-			"underline": false,
-			"backgroundColor": "transparent",
-			"bold": false,
-			"italic": false
-		}
-	],
+	// "better-comments.tags": [
+	// 	{
+	// 		"tag": "!",
+	// 		"color": "#e78284",
+	// 		"strikethrough": false,
+	// 		"underline": false,
+	// 		"backgroundColor": "transparent",
+	// 		"bold": false,
+	// 		"italic": false
+	// 	},
+	// 	{
+	// 		"tag": "?",
+	// 		"color": "#85c1dc",
+	// 		"strikethrough": false,
+	// 		"underline": false,
+	// 		"backgroundColor": "transparent",
+	// 		"bold": false,
+	// 		"italic": false
+	// 	},
+	// 	{
+	// 		"tag": "",
+	// 		"color": "#626880",
+	// 		"strikethrough": false,
+	// 		"underline": false,
+	// 		"backgroundColor": "transparent",
+	// 		"bold": false,
+	// 		"italic": false
+	// 	},
+	// 	{
+	// 		"tag": "//",
+	// 		"color": "#626880",
+	// 		"strikethrough": true,
+	// 		"underline": false,
+	// 		"backgroundColor": "transparent",
+	// 		"bold": false,
+	// 		"italic": false
+	// 	},
+	// 	{
+	// 		"tag": "todo",
+	// 		"color": "#ef9f76",
+	// 		"strikethrough": false,
+	// 		"underline": false,
+	// 		"backgroundColor": "transparent",
+	// 		"bold": false,
+	// 		"italic": false
+	// 	},
+	// 	{
+	// 		"tag": "*",
+	// 		"color": "#81c8be",
+	// 		"strikethrough": false,
+	// 		"underline": false,
+	// 		"backgroundColor": "transparent",
+	// 		"bold": false,
+	// 		"italic": false
+	// 	}
+	// ],
 	"breadcrumbs.enabled": true,
 	"breadcrumbs.filePath": "off",
-	"chat.editor.fontSize": 16,
 	"css.format.spaceAroundSelectorSeparator": true,
 	"css.lint.fontFaceProperties": "error",
-	"debug.console.fontSize": 16,
-	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"diffEditor.ignoreTrimWhitespace": true,
+	// "editor.defaultFormatter": "esbenp.prettier-vscode",
 	"editor.fontFamily": "Monaspace Neon",
 	"editor.fontLigatures": "'calt', 'ss01', 'ss02', 'ss03', 'ss05', 'ss06', 'ss07', 'ss08', 'ss09', 'ss10', 'ss11', 'liga', 'cv01' 2, 'cv31' 1",
-	"editor.fontSize": 16,
+	"editor.fontSize": 14,
 	"editor.fontWeight": 400,
 	"editor.formatOnPaste": true,
 	"editor.formatOnSave": true,
@@ -68,10 +76,10 @@
 	"editor.linkedEditing": true,
 	"editor.maxTokenizationLineLength": 20000,
 	"editor.minimap.autohide": "mouseover",
+	"editor.minimap.enabled": true,
 	"editor.minimap.maxColumn": 80,
 	"editor.minimap.renderCharacters": false,
 	"editor.minimap.scale": 1,
-	"editor.minimap.sectionHeaderFontSize": 16,
 	"editor.minimap.showSlider": "always",
 	"editor.minimap.side": "right",
 	"editor.minimap.size": "proportional",
@@ -80,12 +88,14 @@
 	"editor.renderControlCharacters": false,
 	"editor.renderLineHighlight": "all",
 	"editor.renderWhitespace": "none",
-	"editor.rulers": [80],
-	"editor.scrollBeyondLastColumn": 1,
+	"editor.rulers": [
+		80
+	],
 	"editor.scrollbar.horizontal": "hidden",
 	"editor.scrollbar.horizontalScrollbarSize": 10,
 	"editor.scrollbar.vertical": "hidden",
 	"editor.scrollbar.verticalScrollbarSize": 10,
+	"editor.scrollBeyondLastColumn": 1,
 	"editor.semanticHighlighting.enabled": true,
 	"editor.smoothScrolling": true,
 	"editor.stickyScroll.enabled": false,
@@ -94,18 +104,14 @@
 	"editor.wordWrap": "bounded",
 	"editor.wordWrapColumn": 80,
 	"emmet.triggerExpansionOnTab": true,
-	"emmet.includeLanguages": {
-		"postcss": "css"
-	},
-	"errorLens.margin": "8ch",
-	"evenBetterToml.formatter.allowedBlankLines": 2,
+	//"errorLens.margin": "4ch",
 	"explorer.confirmDelete": false,
 	"explorer.confirmDragAndDrop": false,
 	"explorer.incrementalNaming": "smart",
 	"explorer.openEditors.sortOrder": "alphabetical",
 	"explorer.sortOrder": "type",
 	"files.autoSave": "afterDelay",
-	"files.autoSaveDelay": 5000,
+	"files.autoSaveDelay": 3000,
 	"files.exclude": {
 		"**/.DS_Store": true,
 		"**/.git": true,
@@ -114,10 +120,12 @@
 		"**/.yarn/cache": true,
 		"**/CVS": true,
 		"**/bower_components": true,
-		"**/dist": false,
-		"**/node_modules": false,
+		"**/dist": true,
+		"**/node_modules": true,
 		"**/tmp": true,
-		"**/.vscode": false
+		"**/.vscode": true,
+		"**/.angular": true,
+		"*.md": true
 	},
 	"files.trimTrailingWhitespace": true,
 	"files.watcherExclude": {
@@ -128,91 +136,28 @@
 		"**/bower_components/**": true,
 		"**/dist/**": false,
 		"**/node_modules/**": true,
-		"**/tmp/**": true
+		"**/tmp/**": true,
+		"**/.angular/**": true
 	},
-	"gist.defaultPrivate": true,
 	"git.autofetch": true,
 	"git.confirmSync": false,
 	"git.enableSmartCommit": true,
 	"git.replaceTagsWhenPull": true,
-	"github.copilot.nextEditSuggestions.enabled": true,
-	"gitlens.advanced.messages": {
-		"suppressCreatePullRequestPrompt": true
-	},
-	"gitlens.graph.minimap.enabled": false,
-	"html.format.wrapLineLength": 0,
+	//"gitlens.advanced.messages": {
+	//"suppressCreatePullRequestPrompt": true
+	//},
+	//"gitlens.graph.minimap.enabled": false,
+	"html.format.wrapLineLength": 120,
+	"json.schemaDownload.enable": true,
 	"less.lint.fontFaceProperties": "error",
-	"lifeline.battery.interval": 60000,
-	"lifeline.clock.format": "H:mm",
-	"lifeline.clock.interval": 60000,
-	"liveServer.settings.donotShowInfoMsg": true,
-	"liveServer.settings.donotVerifyTags": true,
-	"liveServer.settings.useLocalIp": true,
-	"path-intellisense.showHiddenFiles": false,
-	"peacock.affectActivityBar": false,
-	"peacock.affectSashHover": false,
-	"peacock.affectTabActiveBorder": true,
-	"peacock.affectTitleBar": false,
-	"peacock.favoriteColors": [
-		{
-			"name": "Pink",
-			"value": "#f5c2e7"
-		},
-		{
-			"name": "Mauve",
-			"value": "#cba6f7"
-		},
-		{
-			"name": "Red",
-			"value": "#f38ba8"
-		},
-		{
-			"name": "Maroon",
-			"value": "#eba0ac"
-		},
-		{
-			"name": "Peach",
-			"value": "#fab387"
-		},
-		{
-			"name": "Yellow",
-			"value": "#f9e2af"
-		},
-		{
-			"name": "Green",
-			"value": "#a6e3a1"
-		},
-		{
-			"name": "Teal",
-			"value": "#94e2d5"
-		},
-		{
-			"name": "Sky",
-			"value": "#89dceb"
-		},
-		{
-			"name": "Sapphire",
-			"value": "#74c7ec"
-		},
-		{
-			"name": "Blue",
-			"value": "#89b4fa"
-		},
-		{
-			"name": "Lavender",
-			"value": "#b4befe"
-		}
-	],
-	"peacock.showColorInStatusBar": false,
-	"peacock.surpriseMeFromFavoritesOnly": true,
-	"prettier.useTabs": true,
-	"problems.showCurrentInStatus": true,
-	"redhat.telemetry.enabled": false,
+	//"path-intellisense.showHiddenFiles": true,
+	//"prettier.useTabs": true,
+	"problems.showCurrentInStatus": false,
 	"scm.diffDecorations": "gutter",
-	"scm.inputFontSize": 16,
 	"scss.lint.fontFaceProperties": "error",
 	"scss.lint.unknownAtRules": "ignore",
-	"sonarlint.disableTelemetry": true,
+	//"sonarlint.disableTelemetry": true,
+	//"sonarlint.focusOnNewCode": true,
 	"terminal.integrated.cursorBlinking": true,
 	"terminal.integrated.cursorStyle": "underline",
 	"terminal.integrated.cursorStyleInactive": "none",
@@ -221,9 +166,8 @@
 	"terminal.integrated.fontFamily": "MonaspiceNe Nerd Font Propo",
 	"terminal.integrated.fontLigatures.enabled": true,
 	"terminal.integrated.fontLigatures.featureSettings": "'calt' on, 'ss01' on, 'ss02' on, 'ss03' on, 'ss05' on, 'ss06' on, 'ss07' on, 'ss08' on, 'ss09' on, 'ss10' on, 'ss11' on, 'liga' on, 'cv01' 2, 'cv31' 1",
-	"terminal.integrated.fontSize": 16,
-	"terminal.integrated.fontWeight": 300,
-	"terminal.integrated.fontWeightBold": "800",
+	"terminal.integrated.fontWeight": 400,
+	"terminal.integrated.fontWeightBold": 600,
 	"terminal.integrated.gpuAcceleration": "on",
 	"terminal.integrated.letterSpacing": 0,
 	"terminal.integrated.lineHeight": 0,
@@ -235,45 +179,26 @@
 	"terminal.integrated.unicodeVersion": "11",
 	"window.autoDetectColorScheme": true,
 	"window.commandCenter": false,
-	"window.title": "${rootName} ${activeEditorShort} | ${appName}",
-	"workbench.colorTheme": "Catppuccin Frappé",
+	"workbench.activityBar.location": "top",
 	"workbench.editor.centeredLayoutFixedWidth": true,
 	"workbench.editor.closeOnFileDelete": true,
+	"workbench.editor.editorActionsLocation": "hidden",
+	"workbench.editor.enablePreview": false,
 	"workbench.fontAliasing": "auto",
-	"workbench.iconTheme": "vscode-jetbrains-icon-theme-2023-dark",
 	"workbench.layoutControl.enabled": false,
 	"workbench.list.mouseWheelScrollSensitivity": 4,
 	"workbench.list.smoothScrolling": true,
+	"workbench.navigationControl.enabled": false,
 	"workbench.preferredDarkColorTheme": "Catppuccin Mocha",
 	"workbench.preferredLightColorTheme": "Catppuccin Macchiato",
-	"workbench.productIconTheme": "icons-carbon",
 	"workbench.startupEditor": "none",
 	"workbench.tree.expandMode": "singleClick",
 	"workbench.tree.indent": 20,
 	"zenMode.restore": false,
 	"[html]": {
-		"editor.rulers": [112],
+		"editor.rulers": [
+			120
+		],
 		"editor.wordWrap": "on"
-	},
-	"[sass]": {
-		"editor.defaultFormatter": "syler.sass-indented"
-	},
-	"[shellscript]": {
-		"editor.defaultFormatter": "mkhl.shfmt"
-	},
-	"[properties]": {
-		"editor.defaultFormatter": "mkhl.shfmt"
-	},
-	"[ignore]": {
-		"editor.defaultFormatter": "mkhl.shfmt"
-	},
-	"diffEditor.ignoreTrimWhitespace": false,
-	"sonarlint.focusOnNewCode": true,
-	"[toml]": {
-		"editor.defaultFormatter": "tamasfe.even-better-toml"
-	},
-	"[prisma]": {
-		"editor.defaultFormatter": "Prisma.prisma"
-	},
-	"workbench.editor.enablePreview": false
+	}
 }

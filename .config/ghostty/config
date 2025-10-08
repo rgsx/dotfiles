@@ -1,11 +1,14 @@
 macos-titlebar-style = transparent
-theme = dark:Catppuccin Mocha, light:Catppuccin Latte
+theme = Catppuccin Mocha
 quit-after-last-window-closed = true
-window-width = 120
+macos-titlebar-style = transparent
+macos-window-buttons = hidden
+window-decoration = client
+window-width = 100
 window-height = 32
 window-padding-color = extend
-window-padding-y = 8 
-window-padding-x = 5
+window-padding-y = 0 
+window-padding-x = 4
 window-padding-balance = true
 font-size = 16
 
