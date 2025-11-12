@@ -46,6 +46,22 @@ dirsize() {
   fi | sort -hr
 }
 
+## Backup DIR or File(s) to Zip 
+backup() {
+  if [ $# -lt 1 ]; then
+    echo "Usage: backupZip <path...>";
+    return 1;
+  fi;
+
+  local timestamp=$(date +"%Y%m%d_%H%M%S");
+  local out="backup_${timestamp}.zip";
+
+  # -r handles directories; files are added normally
+  zip -r "$out" "$@" >/dev/null;
+
+  echo "Backup created: $out";
+};
+
 ## Custom YouTube download fucntion (yt-dlp) - works for other video sites 
 youtube() {
   for url in "$@"; do
