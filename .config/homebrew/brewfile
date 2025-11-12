@@ -1,6 +1,8 @@
 tap "oven-sh/bun"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
+# Parser generator
+brew "bison", link: true
 # Display graphs and colors of file system space/usage
 brew "dfc"
 # Utility to configure multi-display resolutions and arrangements
@@ -31,10 +33,14 @@ brew "lf"
 brew "openjdk"
 # Java-based project management
 brew "maven"
+# Minimalist GNU for Windows and GCC cross-compilers
+brew "mingw-w64"
 # Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
 # Pinentry for GPG on Mac
 brew "pinentry-mac"
+# Package compiler and linker metadata toolkit
+brew "pkgconf"
 # Monitor data's progress through a pipe
 brew "pv"
 # Command-line YAML and XML processor that wraps jq
@@ -49,6 +55,8 @@ brew "starship"
 brew "tree"
 # Extremely fast Python package installer and resolver, written in Rust
 brew "uv"
+# Automatic workarounds for problems in Wine
+brew "winetricks"
 # Feature-rich command-line audio/video downloader
 brew "yt-dlp"
 # Shell extension to navigate your filesystem faster
@@ -59,5 +67,27 @@ cask "font-jetbrains-mono-nerd-font"
 cask "font-monaspice-nerd-font"
 # Thumbnails, static previews, cover art and metadata for video files
 cask "qlvideo"
-# Open-source code editor
-cask "visual-studio-code"
+# Open-source version of the X.Org X Window System
+cask "xquartz"
+vscode "aaron-bond.better-comments"
+vscode "angular.ng-template"
+vscode "ardonplay.vscode-jetbrains-icon-theme"
+vscode "bradlc.vscode-tailwindcss"
+vscode "catppuccin.catppuccin-vsc"
+vscode "christian-kohler.path-intellisense"
+vscode "csstools.postcss"
+vscode "dbaeumer.vscode-eslint"
+vscode "eamodio.gitlens"
+vscode "esbenp.prettier-vscode"
+vscode "google.geminicodeassist"
+vscode "markwylde.vscode-filesize"
+vscode "openai.chatgpt"
+vscode "pranaygp.vscode-css-peek"
+vscode "prisma.prisma"
+vscode "rangav.vscode-thunder-client"
+vscode "ritwickdey.liveserver"
+vscode "sonarsource.sonarlint-vscode"
+vscode "sumneko.lua"
+vscode "syler.sass-indented"
+vscode "tyriar.sort-lines"
+vscode "usernamehw.errorlens"

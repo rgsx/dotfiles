@@ -21,7 +21,6 @@ list() {
    eza --oneline --long --tree --classify=always --color=auto --icons=always --hyperlink --list-dirs --level=1 --sort=type --classify=always --group-directories-first --git --no-permissions --no-filesize --no-user --no-time . $1
 }
 
-
 ## Safe delete with trash
 delete() {
   local args=()
@@ -134,10 +133,33 @@ brewup() {
 }
 
 ## Sets development files on macOS to be open by VSCode as default 
-setDevFileTypes() {
+setDevFileTypesOld() {
 curl "https://raw.githubusercontent.com/github/linguist/master/lib/linguist/languages.yml" | yq -r "to_entries | (map(.value.extensions) | flatten) - [null] | unique | .[]" | xargs -L 1 -I "{}" duti -s com.microsoft.VSCode {} all 2>&1
 echo "Done  "
 }
+
+## Set dev file types on macOS to open with a given editor (Cursor by default)
+setDevFileTypes() {
+  local APP_NAME="${1:-Cursor}";
+  local BID;
+
+  # Ensure deps exist
+  for bin in curl yq duti osascript; do
+    command -v "$bin" >/dev/null 2>&1 || { echo "Missing '$bin'. Install it first (brew install $bin);"; return 1; };
+  done;
+
+  # Resolve the bundle identifier dynamically
+  BID="$(osascript -e "id of app \"${APP_NAME}\"" 2>/dev/null)" || { echo "App '${APP_NAME}' not found. Is it installed?"; return 1; };
+
+  echo "Using ${APP_NAME} (${BID}) as default for dev file types…";
+
+  # Pull extensions from linguist and assign via duti
+  curl -fsSL "https://raw.githubusercontent.com/github/linguist/master/lib/linguist/languages.yml" \
+  | yq -r "to_entries | (map(.value.extensions) | flatten) - [null] | unique | .[]" \
+  | xargs -L 1 -I "{}" duti -s "${BID}" {} all 2>&1;
+
+  echo "Done  ";
+};
 
 ## Complete Fuzzy finder UI with code highlight previews
 fuzz(){
