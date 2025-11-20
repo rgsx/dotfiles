@@ -62,6 +62,22 @@ backup() {
   echo "Backup created: $out";
 };
 
+# Test API ping (GET)
+apiping() {
+  url="$1";
+  if [ -z "$url" ]; then
+    echo "No URL provided";
+    return 1;
+  fi;
+
+  start=$(date +%s%3N);
+  status=$(curl -s -o /dev/null -w "%{http_code}" "$url");
+  end=$(date +%s%3N);
+  time=$((end - start));
+
+  echo "Status: $status | Time: ${time}ms | URL: $url";
+};
+
 ## Custom YouTube download fucntion (yt-dlp) - works for other video sites 
 youtube() {
   for url in "$@"; do
@@ -92,12 +108,17 @@ instagram() {
   for url in "$@"; do
     output_file="%(channel,creator,uploader)s | %(title.0:48)s | %(id.0:16)s.%(ext)s"
     output_dir="$HOME/downloads/↪ Terminal/instagram.com/"
-    download_file=$(yt-dlp --quiet --progress --console-title --no-config-locations --force-overwrites --concurrent-fragments 8 --restrict-filenames --cookies-from-browser firefox --no-warnings $url --format 'bv*+ba/b' --output "$output_dir$output_file" --print after_move:filepath)
+    download_file=$(yt-dlp --quiet --progress --console-title --no-config-locations --force-overwrites --concurrent-fragments 8 --restrict-filenames --cookies-from-browser safari --no-warnings $url --format 'bv*+ba/b' --output "$output_dir$output_file" --print after_move:filepath)
     to_convert="$(basename "$download_file")"
     #echo $to_convert
     ffmpeg -i "$output_dir$to_convert" -c:v libx265 -tag:v hvc1 -crf 20 -pix_fmt yuv420p10le -c:a aac -b:a 160k "$output_dir${to_convert%.*} | converted.mp4" > /dev/null 2>&1
     echo "Done "
   done
+}
+
+## Convert video to an iOS compatible mp4
+convertToMp4() {
+ ffmpeg -i "$1" -c:v libx265 -tag:v hvc1 -crf 20 -pix_fmt yuv420p10le -c:a aac -b:a 160k "${1%.*} | converted.mp4" 
 }
 
 ## Homebrew full maintance function
