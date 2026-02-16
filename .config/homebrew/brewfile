@@ -15,13 +15,13 @@ brew "eza"
 brew "fastfetch"
 # Simple, fast and user-friendly alternative to find
 brew "fd"
-# Play, record, convert, and stream audio and video
+# Play, record, convert, and stream select audio and video codecs
 brew "ffmpeg"
 # Command-line fuzzy finder written in Go
 brew "fzf"
 # Distributed revision control system
 brew "git"
-# GNU Pretty Good Privacy (PGP) package
+# GNU Privacy Guard (OpenPGP)
 brew "gnupg"
 # Open source programming language to build simple/reliable/efficient software
 brew "go"
@@ -39,6 +39,8 @@ brew "mingw-w64"
 brew "neovim"
 # Pinentry for GPG on Mac
 brew "pinentry-mac"
+# Animated pipes terminal screensaver
+brew "pipes-sh"
 # Package compiler and linker metadata toolkit
 brew "pkgconf"
 # Monitor data's progress through a pipe
@@ -82,6 +84,7 @@ vscode "esbenp.prettier-vscode"
 vscode "google.geminicodeassist"
 vscode "markwylde.vscode-filesize"
 vscode "openai.chatgpt"
+vscode "pixl-garden.bongocat"
 vscode "pranaygp.vscode-css-peek"
 vscode "prisma.prisma"
 vscode "rangav.vscode-thunder-client"
@@ -89,5 +92,8 @@ vscode "ritwickdey.liveserver"
 vscode "sonarsource.sonarlint-vscode"
 vscode "sumneko.lua"
 vscode "syler.sass-indented"
+vscode "tenninebt.vscode-koverage"
 vscode "tyriar.sort-lines"
 vscode "usernamehw.errorlens"
+vscode "yczhang1028.project-pilot"
+vscode "yoavbls.pretty-ts-errors"
