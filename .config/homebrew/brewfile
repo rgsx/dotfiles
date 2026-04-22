@@ -21,6 +21,8 @@ brew "ffmpeg"
 brew "fzf"
 # Distributed revision control system
 brew "git"
+# Quickly rewrite git repository history
+brew "git-filter-repo"
 # GNU Privacy Guard (OpenPGP)
 brew "gnupg"
 # Open source programming language to build simple/reliable/efficient software
@@ -63,12 +65,14 @@ brew "winetricks"
 brew "yt-dlp"
 # Shell extension to navigate your filesystem faster
 brew "zoxide"
+# Zsh port of Fish shell's history search
+brew "zsh-history-substring-search"
 # Incredibly fast JavaScript runtime, bundler, transpiler and package manager - all in one.
 brew "oven-sh/bun/bun"
 cask "font-jetbrains-mono-nerd-font"
 cask "font-monaspice-nerd-font"
 # Thumbnails, static previews, cover art and metadata for video files
-cask "qlvideo"
+cask "quicklook-video"
 # Open-source version of the X.Org X Window System
 cask "xquartz"
 vscode "aaron-bond.better-comments"
@@ -80,14 +84,16 @@ vscode "christian-kohler.path-intellisense"
 vscode "csstools.postcss"
 vscode "dbaeumer.vscode-eslint"
 vscode "eamodio.gitlens"
+vscode "enkia.tokyo-night"
 vscode "esbenp.prettier-vscode"
 vscode "google.geminicodeassist"
 vscode "markwylde.vscode-filesize"
+vscode "mermaidchart.vscode-mermaid-chart"
+vscode "oderwat.indent-rainbow"
 vscode "openai.chatgpt"
 vscode "pixl-garden.bongocat"
 vscode "pranaygp.vscode-css-peek"
 vscode "prisma.prisma"
-vscode "rangav.vscode-thunder-client"
 vscode "ritwickdey.liveserver"
 vscode "sonarsource.sonarlint-vscode"
 vscode "sumneko.lua"
@@ -97,3 +103,4 @@ vscode "tyriar.sort-lines"
 vscode "usernamehw.errorlens"
 vscode "yczhang1028.project-pilot"
 vscode "yoavbls.pretty-ts-errors"
+npm "corepack"

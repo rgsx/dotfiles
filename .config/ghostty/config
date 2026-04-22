@@ -1,5 +1,5 @@
 macos-titlebar-style = transparent
-theme = Catppuccin Mocha
+theme = Carbonfox
 quit-after-last-window-closed = true
 macos-titlebar-style = transparent
 macos-window-buttons = hidden
@@ -7,7 +7,7 @@ window-decoration = client
 window-width = 100
 window-height = 32
 window-padding-color = extend
-window-padding-y = 1 
+window-padding-y = 1
 window-padding-x = 4
 window-padding-balance = true
 font-size = 16
@@ -24,7 +24,7 @@ font-style-bold-italic = "Bold Italic"
 window-subtitle = false
 macos-titlebar-proxy-icon = hidden
 
-macos-icon = glass 
+macos-icon = glass
 
 font-feature = +liga
 
@@ -56,7 +56,7 @@ macos-secure-input-indication = false
 auto-update = check
 auto-update-channel = stable
 
-# custom-shader = shaders/shader.glsl
+ custom-shader = shaders/shader.glsl
 # custom-shader = shaders/animated-gradient-shader.glsl
 # custom-shader = shaders/bettercrt.glsl
 # custom-shader = shaders/bloom.glsl
@@ -68,7 +68,6 @@ auto-update-channel = stable
 # custom-shader = shaders/bloom050.glsl
 # custom-shader = shaders/bloom060.glsl
 # custom-shader = shaders/bloom075.glsl
-# custom-shader = shaders/bloom1.glsl
 # custom-shader = shaders/crt.glsl
 # custom-shader = shaders/cubes.glsl
 # custom-shader = shaders/dither.glsl

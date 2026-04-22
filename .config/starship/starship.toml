@@ -3,7 +3,7 @@
 
 # Starship Config
 add_newline = false
-
+command_timeout = 1000 
 format = """
 ($cmd_duration\n)\
 ($directory)($fill)\
