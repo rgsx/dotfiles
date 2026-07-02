@@ -1,0 +1,8 @@
+{
+  "trustedtaps": [
+    "anomalyco/tap",
+    "https://github.com/jundot/omlx",
+    "muxy-app/tap",
+    "oven-sh/bun"
+  ]
+}

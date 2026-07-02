@@ -1,3 +1,5 @@
+Include /Users/roberto/.config/colima/ssh_config
+
 # Personal GitHub (existing default key)
 Host github.com
   HostName ssh.github.com
@@ -25,3 +27,10 @@ Host gnp-gitlab
   IdentitiesOnly yes
   AddKeysToAgent yes
   UseKeychain yes
+
+Host vps
+  HostName 168.231.69.27
+  User root
+  IdentityFile ~/.ssh/id_ed25519
+  IdentitiesOnly yes
+  StrictHostKeyChecking accept-new

@@ -1,12 +1,21 @@
-tap "oven-sh/bun"
+tap "anomalyco/tap", trusted: true
+tap "jundot/omlx", "https://github.com/jundot/omlx", trusted: true
+tap "muxy-app/tap", trusted: true
+tap "oven-sh/bun", trusted: true
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
 # Parser generator
 brew "bison", link: true
+# Container runtimes on MacOS (and Linux) with minimal setup
+brew "colima"
 # Display graphs and colors of file system space/usage
 brew "dfc"
 # Utility to configure multi-display resolutions and arrangements
 brew "displayplacer"
+# Pack, ship and run any application as a lightweight container
+brew "docker"
+# Isolated development environments using Docker
+brew "docker-compose"
 # Select default apps for documents and URL schemes on macOS
 brew "duti"
 # Modern, maintained replacement for ls
@@ -19,6 +28,8 @@ brew "fd"
 brew "ffmpeg"
 # Command-line fuzzy finder written in Go
 brew "fzf"
+# GitHub command-line tool
+brew "gh"
 # Distributed revision control system
 brew "git"
 # Quickly rewrite git repository history
@@ -67,17 +78,31 @@ brew "yt-dlp"
 brew "zoxide"
 # Zsh port of Fish shell's history search
 brew "zsh-history-substring-search"
+# The AI coding agent built for the terminal.
+brew "anomalyco/tap/opencode"
 # Incredibly fast JavaScript runtime, bundler, transpiler and package manager - all in one.
 brew "oven-sh/bun/bun"
+# OpenAI's coding agent that runs in your terminal
+cask "codex"
+# Window peeking utility app
+cask "dockdoor"
 cask "font-jetbrains-mono-nerd-font"
 cask "font-monaspice-nerd-font"
+# Utility to hide menu bar items
+cask "hiddenbar"
+# Open-source application manager and system cleaner
+cask "puremac"
 # Thumbnails, static previews, cover art and metadata for video files
 cask "quicklook-video"
 # Open-source version of the X.Org X Window System
 cask "xquartz"
 vscode "aaron-bond.better-comments"
 vscode "angular.ng-template"
+vscode "anysphere.remote-containers"
+vscode "anysphere.remote-ssh"
 vscode "ardonplay.vscode-jetbrains-icon-theme"
+vscode "atlassian.atlascode"
+vscode "beardedbear.beardedtheme"
 vscode "bradlc.vscode-tailwindcss"
 vscode "catppuccin.catppuccin-vsc"
 vscode "christian-kohler.path-intellisense"
@@ -86,16 +111,20 @@ vscode "dbaeumer.vscode-eslint"
 vscode "eamodio.gitlens"
 vscode "enkia.tokyo-night"
 vscode "esbenp.prettier-vscode"
+vscode "google.gemini-cli-vscode-ide-companion"
 vscode "google.geminicodeassist"
 vscode "markwylde.vscode-filesize"
 vscode "mermaidchart.vscode-mermaid-chart"
+vscode "nuromirg.nightfox-theme-collections"
 vscode "oderwat.indent-rainbow"
 vscode "openai.chatgpt"
 vscode "pixl-garden.bongocat"
 vscode "pranaygp.vscode-css-peek"
 vscode "prisma.prisma"
+vscode "redhat.vscode-yaml"
 vscode "ritwickdey.liveserver"
 vscode "sonarsource.sonarlint-vscode"
+vscode "sst-dev.opencode"
 vscode "sumneko.lua"
 vscode "syler.sass-indented"
 vscode "tenninebt.vscode-koverage"
@@ -103,4 +132,3 @@ vscode "tyriar.sort-lines"
 vscode "usernamehw.errorlens"
 vscode "yczhang1028.project-pilot"
 vscode "yoavbls.pretty-ts-errors"
-npm "corepack"

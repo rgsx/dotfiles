@@ -1,5 +1,5 @@
 macos-titlebar-style = transparent
-theme = Carbonfox
+theme = Catppuccin Mocha
 quit-after-last-window-closed = true
 macos-titlebar-style = transparent
 macos-window-buttons = hidden
@@ -56,7 +56,7 @@ macos-secure-input-indication = false
 auto-update = check
 auto-update-channel = stable
 
- custom-shader = shaders/shader.glsl
+# custom-shader = shaders/shader.glsl
 # custom-shader = shaders/animated-gradient-shader.glsl
 # custom-shader = shaders/bettercrt.glsl
 # custom-shader = shaders/bloom.glsl

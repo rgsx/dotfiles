@@ -86,7 +86,7 @@ youtube() {
     sort="fps:60,res:1080,hdr:12"
     format='bv*[ext=mp4][vcodec~="^((he|a)vc|h26[45])"]+ba[ext=m4a]/b[ext=mp4]/bv*+ba/b'
     #--trim-filenames 128
-    yt-dlp --quiet --progress --console-title --no-config-locations --force-overwrites --concurrent-fragments 8 --cookies-from-browser firefox --no-warnings --add-metadata --compat-options embed-metadata $url --format $format --format-sort $sort --output "$output_dir$output_name"
+    yt-dlp --ignore-errors --quiet --progress --console-title --no-config-locations --force-overwrites --concurrent-fragments 8 --cookies-from-browser firefox --no-warnings --sleep-interval 5 --max-sleep-interval 60 --add-metadata --compat-options embed-metadata $url --format $format --format-sort $sort --output "$output_dir$output_name"
   done
   echo "Done"
 }

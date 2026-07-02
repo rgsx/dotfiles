@@ -2,13 +2,13 @@
 bindkey -e
 bindkey '^p' history-search-backward
 bindkey '^n' history-search-forward
-bindkey "$terminfo[kcuu1]" history-beginning-search-backward-end
-bindkey "$terminfo[kcud1]" history-beginning-search-forward-end
+[[ -n "${terminfo[kcuu1]}" ]] && bindkey "${terminfo[kcuu1]}" history-beginning-search-backward-end
+[[ -n "${terminfo[kcud1]}" ]] && bindkey "${terminfo[kcud1]}" history-beginning-search-forward-end
 bindkey '^[w' kill-region
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
-bindkey "$terminfo[kcuu1]" history-substring-search-up
-bindkey "$terminfo[kcud1]" history-substring-search-down
+[[ -n "${terminfo[kcuu1]}" ]] && bindkey "${terminfo[kcuu1]}" history-substring-search-up
+[[ -n "${terminfo[kcud1]}" ]] && bindkey "${terminfo[kcud1]}" history-substring-search-down
 bindkey -M emacs '^P' history-substring-search-up
 bindkey -M emacs '^N' history-substring-search-down
 bindkey -M vicmd 'k' history-substring-search-up
@@ -29,6 +29,9 @@ setopt hist_find_no_dups
 setopt autocd
 setopt CORRECT
 
+# Docker CLI completions need to be on fpath before compinit runs in plugins.zsh.
+fpath=($HOME/.docker/completions $fpath)
+
 # Sources
 source "$XDG_CONFIG_HOME/zsh/prompt.zsh"
 source "$XDG_CONFIG_HOME/zsh/plugins.zsh"
@@ -36,11 +39,48 @@ source "$XDG_CONFIG_HOME/zsh/aliases.zsh"
 source "$XDG_CONFIG_HOME/zsh/functions.zsh"
 
 # Shell integrations
-eval "$(/opt/homebrew/bin/brew shellenv)"
+# Homebrew shellenv without spawning `brew` on every shell startup.
+if [[ -d /opt/homebrew ]]; then
+  export HOMEBREW_PREFIX="/opt/homebrew"
+  export HOMEBREW_CELLAR="/opt/homebrew/Cellar"
+  export HOMEBREW_REPOSITORY="/opt/homebrew"
+  case ":$PATH:" in
+    *:/opt/homebrew/bin:*) ;;
+    *) export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" ;;
+  esac
+  [[ -n "${MANPATH:-}" ]] && case ":$MANPATH:" in
+    *:/opt/homebrew/share/man:*) ;;
+    *) export MANPATH="/opt/homebrew/share/man:$MANPATH" ;;
+  esac
+  [[ -n "${INFOPATH:-}" ]] && case ":$INFOPATH:" in
+    *:/opt/homebrew/share/info:*) ;;
+    *) export INFOPATH="/opt/homebrew/share/info:$INFOPATH" ;;
+  esac
+fi
 eval "$(fzf --zsh)"
 eval "$(zoxide init --cmd cd zsh)"
 eval "$(starship init zsh)"
 
-# Load Angular CLI autocompletion.
-source <(ng completion script)
-source $(brew --prefix)/share/zsh-history-substring-search/zsh-history-substring-search.zsh
+# Load Angular CLI completion only when completing `ng`.
+if command -v ng >/dev/null 2>&1; then
+  _ng_lazy_completion() {
+    local cache_dir="${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
+    local cache_file="$cache_dir/ng-completion.zsh"
+    local ng_bin="$(command -v ng)"
+
+    if [[ ! -s "$cache_file" || "$cache_file" -ot "$ng_bin" ]]; then
+      mkdir -p "$cache_dir"
+      ng completion script >| "$cache_file" 2>/dev/null || return 1
+    fi
+
+    source "$cache_file"
+    _ng "$@"
+  }
+  compdef _ng_lazy_completion ng
+fi
+
+[[ -r /opt/homebrew/share/zsh-history-substring-search/zsh-history-substring-search.zsh ]] && \
+  source /opt/homebrew/share/zsh-history-substring-search/zsh-history-substring-search.zsh
+
+# Hermes Agent — ensure ~/.local/bin is on PATH
+export PATH="$HOME/.local/bin:$PATH"

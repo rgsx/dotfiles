@@ -30,8 +30,21 @@ zinit snippet OMZP::git
 zinit snippet OMZP::sudo
 zinit snippet OMZP::command-not-found
 
-# Load completions
-autoload -Uz compinit && compinit
+# Load completions. Use the existing dump when it is fresh, and rebuild it daily.
+autoload -Uz compinit
+zmodload zsh/stat zsh/datetime 2>/dev/null
+if [[ -n ${ZDOTDIR:-} ]]; then
+  zcompdump="${ZDOTDIR}/.zcompdump"
+else
+  zcompdump="${HOME}/.zcompdump"
+fi
+
+if [[ -s "$zcompdump" ]] && zstat -H zcompdump_stat +mtime "$zcompdump" 2>/dev/null && \
+   (( EPOCHSECONDS - zcompdump_stat[mtime] < 86400 )); then
+  compinit -C -d "$zcompdump"
+else
+  compinit -d "$zcompdump"
+fi
 autoload -Uz history-search-end
 zle -N history-beginning-search-backward-end history-search-end
 zle -N history-beginning-search-forward-end history-search-end
