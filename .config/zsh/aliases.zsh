@@ -33,3 +33,11 @@ alias symlinkJava="sudo ln -sfn /opt/homebrew/opt/openjdk/libexec/openjdk.jdk /L
 
 alias start-zscaler="open -a /Applications/Zscaler/Zscaler.app --hide; sudo find /Library/LaunchDaemons -name '*zscaler*' -exec launchctl load {} \;"
 alias kill-zscaler="find /Library/LaunchAgents -name '*zscaler*' -exec launchctl unload {} \;;sudo find /Library/LaunchDaemons -name '*zscaler*' -exec launchctl unload {} \;"
+
+alias vps="ssh vps"
+alias vps-root="ssh vps-root"
+## Open Transmission Web UI through an SSH tunnel
+alias vps-torrent="vps-transmission"
+## Transmission remote CLI on the VPS
+alias vps-torrents="vps-tr -l"
+alias vps-torrent-pull='vps-torrent-sync "Downloads/↪ VPS" --delete'

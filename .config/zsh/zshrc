@@ -39,25 +39,9 @@ source "$XDG_CONFIG_HOME/zsh/aliases.zsh"
 source "$XDG_CONFIG_HOME/zsh/functions.zsh"
 
 # Shell integrations
-# Homebrew shellenv without spawning `brew` on every shell startup.
-if [[ -d /opt/homebrew ]]; then
-  export HOMEBREW_PREFIX="/opt/homebrew"
-  export HOMEBREW_CELLAR="/opt/homebrew/Cellar"
-  export HOMEBREW_REPOSITORY="/opt/homebrew"
-  case ":$PATH:" in
-    *:/opt/homebrew/bin:*) ;;
-    *) export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH" ;;
-  esac
-  [[ -n "${MANPATH:-}" ]] && case ":$MANPATH:" in
-    *:/opt/homebrew/share/man:*) ;;
-    *) export MANPATH="/opt/homebrew/share/man:$MANPATH" ;;
-  esac
-  [[ -n "${INFOPATH:-}" ]] && case ":$INFOPATH:" in
-    *:/opt/homebrew/share/info:*) ;;
-    *) export INFOPATH="/opt/homebrew/share/info:$INFOPATH" ;;
-  esac
+if [[ -o interactive && -t 0 && -t 1 ]] && command -v fzf >/dev/null 2>&1; then
+  source <(fzf --zsh)
 fi
-eval "$(fzf --zsh)"
 eval "$(zoxide init --cmd cd zsh)"
 eval "$(starship init zsh)"
 
@@ -82,5 +66,10 @@ fi
 [[ -r /opt/homebrew/share/zsh-history-substring-search/zsh-history-substring-search.zsh ]] && \
   source /opt/homebrew/share/zsh-history-substring-search/zsh-history-substring-search.zsh
 
-# Hermes Agent — ensure ~/.local/bin is on PATH
+# Ensure ~/.local/bin is on PATH
 export PATH="$HOME/.local/bin:$PATH"
+# The following lines have been added by Docker Desktop to enable Docker CLI completions.
+fpath=(/Users/roberto/.docker/completions $fpath)
+autoload -Uz compinit
+compinit
+# End of Docker CLI completions

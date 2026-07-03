@@ -188,35 +188,38 @@ description = "Display symbol for remote Git server"
 command = """
 set -e
 
-cache_file="/tmp/starship_giturl_$(git rev-parse --git-dir 2>/dev/null | tr '/' '_').cache"
-if [ -f "$cache_file" ] && [ "$(find "$cache_file" -mmin -1 2>/dev/null)" ]; then
+cache_file="/tmp/starship_giturl_$(pwd | tr '/' '_').cache"
+if [ -f "$cache_file" ] && [ $(( $(date +%s) - $(stat -f %m "$cache_file" 2>/dev/null || stat -c %Y "$cache_file" 2>/dev/null || echo 0) )) -lt 60 ]; then
   cat "$cache_file"
   exit 0
 fi
 
-# Prefer the 'origin' remote; fall back to any configured URL.
 url="$(git config --get remote.origin.url 2>/dev/null || git ls-remote --get-url 2>/dev/null || true)"
 [ -z "$url" ] && exit 1
 
-# Extract host from SSH/HTTPS/CodeCommit/scp-like URLs
-if printf %s "$url" | grep -qE '^[a-z]+://'; then
-  host="$(printf %s "$url" | sed -E 's|^[a-z]+://([^/]+)/.*|\\1|')"
-else
-  # scp-like (git@host:owner/repo.git) or similar
-  host="$(printf %s "$url" | sed -E 's|^[^@]+@([^:/]+)[:/].*|\\1|')"
-fi
-host="$(printf %s "$host" | tr '[:upper:]' '[:lower:]')"
+case "$url" in
+  *://*)
+    host="${url#*://}"
+    host="${host%%/*}"
+    ;;
+  *)
+    host="${url%%:*}"
+    ;;
+esac
+host="${host#*@}"
+host="$(printf '%s' "$host" | tr '[:upper:]' '[:lower:]')"
 
-# Default generic VCS glyph
+[ -z "$host" ] && exit 1
+
 symbol=' '
 remote_host=''
 
 case "$host" in
-  github.com|*.github.com|github.*)
+  github.com|*.github.com|github.*|*github|github*|*github*)
     symbol=' '
     remote_host='GitHub '
     ;;
-  gitlab.com|*.gitlab.com|gitlab.*)
+  gitlab.com|*.gitlab.com|gitlab.*|*gitlab)
     symbol=' '
     remote_host='GitLab '
     ;;
@@ -225,44 +228,36 @@ case "$host" in
     remote_host='Bitbucket '
     ;;
   codeberg.org|*.codeberg.*|gitea.*|*.gitea.*|forgejo.*|*.forgejo.*)
-    # Gitea/Forgejo/Codeberg share similar lineage; reuse the Gitea glyph
     symbol=' '
     remote_host='Gitea '
     ;;
   sr.ht|*.sr.ht|sourcehut.org|*.sourcehut.org)
-    # SourceHut (approximate icon)
     symbol=' '
     remote_host='SourceHut '
     ;;
   dev.azure.com|*.visualstudio.com|azure.*)
-    # Azure DevOps
     symbol=' '
     remote_host='Azure DevOps '
     ;;
   codecommit.*.amazonaws.com|*.codecommit.*)
-    # AWS CodeCommit (approximate using AWS glyph)
     symbol=' '
     remote_host='AWS CodeCommit '
     ;;
-  *)
-    # As a fallback, if the host contains 'git', show a generic Git logo
-    case "$host" in
-      *gtec*)
-        symbol=''
-        remote_host='𝗚𝗧𝗘𝗖'
-        ;;
-      *git*)
-        symbol=' '
-        remote_host="$host "
-        ;;
-    esac
+  *gtec|gtec*|*gtec*)
+    symbol=''
+    remote_host='𝗚𝗧𝗘𝗖'
+    ;;
+  *git*)
+    symbol=' '
+    remote_host="$host "
     ;;
 esac
 
+printf "%s" "$remote_host$symbol" > "$cache_file"
 printf "%s" "$remote_host$symbol"
 """
 require_repo = true
 shell = ["bash", "--noprofile", "--norc"]
-format = "(at [$output ](bold))"
+format = "(at [$output ](bold) )"
 detect_files = [".gitignore"]
 detect_folders = [".git"]

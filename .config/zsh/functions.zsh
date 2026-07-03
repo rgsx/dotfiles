@@ -62,22 +62,6 @@ backup() {
   echo "Backup created: $out";
 };
 
-# Test API ping (GET)
-apiping() {
-  url="$1";
-  if [ -z "$url" ]; then
-    echo "No URL provided";
-    return 1;
-  fi;
-
-  start=$(date +%s%3N);
-  status=$(curl -s -o /dev/null -w "%{http_code}" "$url");
-  end=$(date +%s%3N);
-  time=$((end - start));
-
-  echo "Status: $status | Time: ${time}ms | URL: $url";
-};
-
 ## Custom YouTube download fucntion (yt-dlp) - works for other video sites 
 youtube() {
   for url in "$@"; do
@@ -275,172 +259,166 @@ delhist() {
   echo "Deleted entries containing: $pattern";
 }
 
-## Gets all Aliases and Functions with their descriptions
-# mydefs: list ONLY your own aliases/functions from your zsh files with "##" descriptions;
-# Usage: mydefs [filter];
-mydefs() {
-  local verbose=0;
-  while getopts ":v" opt; do
-    case "$opt" in
-      v) verbose=1;;
-      *) echo "Usage: mydefs [-v] [filter]"; return 1;;
-    esac;
-  done;
-  shift $((OPTIND-1));
-  local filter="${1:-}";
+## Open Transmission Web UI on the VPS through a local SSH tunnel
+vps-transmission() {
+  local port="${1:-9091}"
+  local url="http://127.0.0.1:${port}/transmission/web/"
 
-  # Edit paths if you keep defs elsewhere; (.N) ignores non-matching globs;
-  local files=(
-    "$XDG_CONFIG_HOME/zsh/aliases.zsh"
-    "$XDG_CONFIG_HOME/zsh/functions.zsh"
-    "$XDG_CONFIG_HOME/zsh/zshenv"
-  );
+  if ! lsof -nP -iTCP:"$port" -sTCP:LISTEN >/dev/null 2>&1; then
+    ssh -fN -L "${port}:127.0.0.1:9091" vps || return 1
+  fi
 
-  local existing=() f;
-  for f in "${files[@]}"; do [[ -f "$f" ]] && existing+=("$f"); done;
-  if (( ${#existing[@]} == 0 )); then
-    echo "No zsh files found to scan."; return 1;
-  fi;
+  open "$url"
+  echo "Transmission Web UI: $url"
+}
 
-  # Colour detection (TTY + tput + NO_COLOR);
-  local use_color=0;
-  if [[ -t 1 && -z "$NO_COLOR" ]]; then
-    if command -v tput >/dev/null 2>&1; then
-      [[ "$(tput colors)" -ge 8 ]] && use_color=1;
+## Stop the local SSH tunnel for the VPS Transmission Web UI
+vps-transmission-stop() {
+  local port="${1:-9091}"
+  pkill -f "ssh .*${port}:127.0.0.1:9091.*vps" 2>/dev/null || true
+}
+
+## Run transmission-remote against the VPS daemon
+vps-tr() {
+  ssh vps transmission-remote 127.0.0.1:9091 "$@"
+}
+
+## Add one or more torrent URLs/files/magnets to the VPS daemon
+vps-tr-add() {
+  if [ $# -eq 0 ]; then
+    echo "Usage: vps-tr-add <torrent-url|magnet|path> [...]" >&2
+    return 1
+  fi
+  vps-tr -a "$@"
+}
+
+## Pull completed VPS torrents to local Downloads with confirmation
+vps-torrent-sync() {
+  if [[ $# -lt 1 || $1 == -* ]]; then
+    echo "Usage: vps-torrent-pull <local-destination> [--delete]" >&2
+    return 1
+  fi
+
+  local dest="$1"
+  local delete_after=0
+  if [[ "${2:-}" == "--delete" ]]; then
+    delete_after=1
+  fi
+
+  local remote_dir="/home/roberto/downloads/torrents/complete"
+  local remote_list
+  remote_list=$(ssh vps "find ${remote_dir} -mindepth 1 -maxdepth 1 -printf '%f\n' 2>/dev/null" 2>/dev/null)
+
+  if [[ -z "$remote_list" ]]; then
+    echo "No completed torrents found on VPS."
+    return 0
+  fi
+
+  mkdir -p "$dest"
+  echo "Syncing from: ${remote_dir}"
+  echo "Syncing to  : ${dest}"
+  echo
+  echo "Files to download:"
+  echo "$remote_list"
+  echo
+  echo "DRY RUN:"
+  rsync -ahn --progress --ignore-existing -e ssh "vps:${remote_dir}/" "${dest}/"
+  echo
+  echo "Summary:"
+  echo "$remote_list" | wc -l | tr -d ' ' | xargs -I{} echo "{} files queued."
+
+  if [[ $delete_after -eq 1 ]]; then
+    echo
+    echo "This will DELETE the source files from the VPS after copy."
+  fi
+
+  echo
+  read -q "REPLY?Continue with copy? [y/N]: "
+  echo
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    echo "Aborted."
+    return 1
+  fi
+
+  rsync -avh --progress --ignore-existing -e ssh "vps:${remote_dir}/" "${dest}/"
+  local rc=$?
+  if [[ $rc -ne 0 ]]; then
+    echo "rsync failed with exit code ${rc}" >&2
+    return $rc
+  fi
+
+  echo
+  echo "Verifying copied files..."
+  local failed=0
+  while IFS= read -r file; do
+    [[ -z "$file" ]] && continue
+    if [[ ! -f "${dest}/${file}" ]]; then
+      echo "MISSING LOCAL : ${dest}/${file}" >&2
+      failed=1
     else
-      use_color=1;
-    fi;
-  fi;
+      echo "OK LOCAL      : ${dest}/${file}"
+    fi
+  done <<< "$remote_list"
 
-  # Palette;
-  local C_RESET="" C_TITLE="" C_ALIAS="" C_FUNC="" C_EXP="" C_DESC="" C_VAL="";
-  if (( use_color )); then
-    C_RESET=$'\033[0m';
-    C_TITLE=$'\033[1;36m';   # bold cyan;
-    C_ALIAS=$'\033[32m';     # green;
-    C_FUNC=$'\033[35m';      # magenta;
-    C_EXP=$'\033[34m';       # blue;
-    C_DESC=$'\033[90m';      # dim;
-    C_VAL=$'\033[37m';       # light (values);
-  fi;
+  if [[ $failed -ne 0 ]]; then
+    echo "Verification failed; source files were NOT deleted." >&2
+    return 1
+  fi
 
-  (( verbose )) && echo "${C_TITLE}⚠ Showing export VALUES — check for secrets.${C_RESET}";
+  if [[ $delete_after -eq 1 ]]; then
+    echo
+    read -q "REPLY?Delete source files from VPS? [y/N]: "
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+      echo "Source files kept on VPS."
+      return 0
+    fi
 
-  FILT="$filter" VERBOSE_EXPORTS="$verbose" \
-  C_RESET="$C_RESET" C_TITLE="$C_TITLE" C_ALIAS="$C_ALIAS" C_FUNC="$C_FUNC" C_EXP="$C_EXP" C_DESC="$C_DESC" C_VAL="$C_VAL" \
-  perl -e '
-    use strict; use warnings; binmode STDOUT, ":utf8";
-    my $filt = lc($ENV{FILT}//"");
-    my $vexp = ($ENV{VERBOSE_EXPORTS}//"0") eq "1";
-    my ($cR,$cT,$cA,$cF,$cE,$cD,$cV) = @ENV{qw/C_RESET C_TITLE C_ALIAS C_FUNC C_EXP C_DESC C_VAL/};
-    for ($cR,$cT,$cA,$cF,$cE,$cD,$cV) { $_//=q{} }
-
-    my (@aliases, @funcs, @exports);
-    my $prev = "";
-    my ($in, $depth, $fname, $fdesc) = (0, 0, "", "");
-
-    sub add_row {
-      my ($arrref, $name, $desc, $val) = @_;
-      return if $name eq "PATH";                    # <<< EXCLUDE PATH outright
-      $desc = "(no description)" if !defined($desc) || $desc eq "";
-      my $txt = lc("$name $desc");
-      return if $filt ne "" && index($txt, $filt) < 0;
-      push @$arrref, [$name, $desc, (defined($val)?$val:undef)];
+    ssh vps "cd '${remote_dir}' && rm -f ${(f)remote_list}" || {
+      echo "Remote delete failed; check VPS manually." >&2
+      return 1
     }
+    echo "Deleted source files from VPS."
+  fi
 
-    while (<>) {
-      my $line = $_; chomp $line;
-      my $prevdesc = ($prev =~ /^\s*##\s*(.*)\s*$/) ? $1 : "";
+  echo
+  echo "Done."
+  echo "Local  : ${dest}"
+  echo "Remote : ${remote_dir}"
+}
 
-      # Aliases;
-      if ($line =~ /^\s*alias\s+([A-Za-z0-9_][A-Za-z0-9_-]*)\s*=/) {
-        my $name = $1;
-        my $desc = ($line =~ /##\s*(.*)\s*$/) ? $1 : $prevdesc;
-        add_row(\@aliases, $name, $desc);
-      }
+change-hostname() {
+  local new_hostname="$1"
+  if [[ -z "$new_hostname" ]]; then
+    echo "Usage: change-hostname <new-hostname>" >&2
+    return 1
+  fi
 
-      # Exported vars: export ... / typeset|declare -x ...;
-      if ($line =~ /^\s*export\b(.*)$/) {
-        my $rest = $1;
-        my $desc = ($line =~ /##\s*(.*)\s*$/) ? $1 : $prevdesc;
-        for my $tok (grep { length } split /\s+/, $rest) {
-          next if $tok =~ /^-/;
-          $tok =~ s/[;&|]+$//;
-          my $name = "";
-          if ($tok =~ /^([A-Za-z_][A-Za-z0-9_]*)\s*(?:\+?=|$)/) { $name = $1; }
-          next unless $name ne "";
-          next if $name eq "PATH";                 # <<< EXCLUDE PATH
-          my $val = $vexp ? (exists $ENV{$name} ? $ENV{$name} : "(unset)") : undef;
-          add_row(\@exports, $name, $desc, $val);
-        }
-      }
-      elsif ($line =~ /^\s*(typeset|declare)\b(.*)$/) {
-        my ($kw, $rest) = ($1, $2);
-        my $desc = ($line =~ /##\s*(.*)\s*$/) ? $1 : $prevdesc;
-        next unless $rest =~ /-[A-Za-z-]*x/;
-        $rest =~ s/^[ \t]*-[A-Za-z-]+[ \t]*//;
-        for my $tok (grep { length } split /\s+/, $rest) {
-          next if $tok =~ /^-/;
-          $tok =~ s/[;&|]+$//;
-          my $name = "";
-          if ($tok =~ /^([A-Za-z_][A-Za-z0-9_]*)\s*(?:\+?=|$)/) { $name = $1; }
-          next unless $name ne "";
-          next if $name eq "PATH";                 # <<< EXCLUDE PATH
-          my $val = $vexp ? (exists $ENV{$name} ? $ENV{$name} : "(unset)") : undef;
-          add_row(\@exports, $name, $desc, $val);
-        }
-      }
+  echo "Changing hostname to: $new_hostname"
 
-      # Functions;
-      if (!$in && ($line =~ /^\s*([A-Za-z0-9_][A-Za-z0-9_-]*)\s*\(\)\s*\{/
-                || $line =~ /^\s*function\s+([A-Za-z0-9_][A-Za-z0-9_-]*)\s*\{/)) {
-        $fname = $1; $fdesc = $prevdesc; $in = 1; $depth = 1; $prev = $line; next;
-      }
-      if ($in) {
-        $fdesc = $1 if $fdesc eq "" && $line =~ /^\s*##\s*(.*)\s*$/;
-        my $opens  = ($line =~ tr/{//);
-        my $closes = ($line =~ tr/}//);
-        $depth += $opens - $closes;
-        if ($depth <= 0) {
-          add_row(\@funcs, $fname, $fdesc);
-          ($in, $depth, $fname, $fdesc) = (0, 0, "", "");
-        }
-        $prev = $line; next;
-      }
+  if [[ "$OSTYPE" == darwin* ]]; then
+    sudo scutil --set HostName "$new_hostname"
+    sudo scutil --set ComputerName "$new_hostname"
+    sudo scutil --set LocalHostName "$new_hostname"
+    dscacheutil -flushcache
+    echo "Hostname updated on macOS."
+  elif [[ "$OSTYPE" == linux-gnu* ]]; then
+    sudo hostnamectl set-hostname "$new_hostname"
+    echo "Hostname updated on Linux."
+  else
+    echo "Unsupported OS." >&2
+    return 1
+  fi
+}
 
-      $prev = $line;
-    }
-
-    sub pad { my ($s,$w)=@_; $s//=q{}; my $l=length($s); return $s . (" " x ($w>$l?$w-$l:0)); }
-
-    sub print_table {
-      my ($title, $rows, $name_color, $want_value) = @_;
-      print $cT, $title, $cR, "\n";
-      if (!@$rows) { print "—\n\n"; return; }
-
-      my ($wname,$wval)=(4,0);
-      for (@$rows) {
-        $wname = length($_->[0]) if length($_->[0]) > $wname;
-        if ($want_value) {
-          my $v = defined $_->[2] ? $_->[2] : "";
-          $wval = length($v) if length($v) > $wval;
-        }
-      }
-
-      for (@$rows) {
-        my ($n,$d,$v)=@$_;
-        $v = "" unless $want_value;
-        my $line = sprintf("%s%s%s", $name_color, pad($n,$wname), $cR);
-        if ($want_value) { $line .= "  " . $cV . pad($v,$wval) . $cR; }
-        $line .= "  " . $cD . $d . $cR;
-        print $line, "\n";
-      }
-      print "\n";
-    }
-
-    print_table("\nALIASES",   \@aliases, $cA, 0);
-    print_table("\nFUNCTIONS", \@funcs,   $cF, 0);
-    my $etitle = $vexp ? "\nEXPORTS" : "EXPORTS";
-    print_table($etitle, \@exports, $cE, $vexp);
-  ' "${existing[@]}";
-};
+git-host() {
+  local url host
+  url=$(git config --get remote.origin.url 2>/dev/null || git ls-remote --get-url 2>/dev/null || true)
+  [[ -z "$url" ]] && { echo "no remote"; return 1; }
+  case "$url" in
+    *://*) host="${url#*://}"; host="${host%%/*}" ;;
+    *)     host="${url%%:*}" ;;
+  esac
+  host="${host#*@}"
+  print -r -- "$host"
+}
