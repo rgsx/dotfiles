@@ -6,8 +6,6 @@ tap "oven-sh/bun", trusted: true
 brew "bat"
 # Parser generator
 brew "bison", link: true
-# Container runtimes on MacOS (and Linux) with minimal setup
-brew "colima"
 # Display graphs and colors of file system space/usage
 brew "dfc"
 # Utility to configure multi-display resolutions and arrangements
@@ -113,6 +111,7 @@ vscode "enkia.tokyo-night"
 vscode "esbenp.prettier-vscode"
 vscode "google.gemini-cli-vscode-ide-companion"
 vscode "google.geminicodeassist"
+vscode "johnpapa.vscode-peacock"
 vscode "markwylde.vscode-filesize"
 vscode "mermaidchart.vscode-mermaid-chart"
 vscode "nuromirg.nightfox-theme-collections"
