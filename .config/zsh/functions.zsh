@@ -107,6 +107,7 @@ convertToMp4() {
 
 ## Homebrew full maintance function
 brewup() {
+  export PATH="/opt/homebrew/bin:$PATH"
   # Colours
   local red="\033[0;31m"
   local green="\033[0;32m"
