@@ -73,3 +73,6 @@ fpath=(/Users/roberto/.docker/completions $fpath)
 autoload -Uz compinit
 compinit
 # End of Docker CLI completions
+
+# Added by codebase-memory-mcp install
+export PATH="/Users/roberto/.local/bin:$PATH"

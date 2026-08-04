@@ -68,6 +68,8 @@ brew "starship"
 brew "tree"
 # Extremely fast Python package installer and resolver, written in Rust
 brew "uv"
+# JavaScript toolchain manager for reproducible environments
+brew "volta"
 # Automatic workarounds for problems in Wine
 brew "winetricks"
 # Feature-rich command-line audio/video downloader
