@@ -70,12 +70,12 @@ youtube() {
     sort="fps:60,res:1080,hdr:12"
     format='bv*[ext=mp4][vcodec~="^((he|a)vc|h26[45])"]+ba[ext=m4a]/b[ext=mp4]/bv*+ba/b'
     #--trim-filenames 128
-    yt-dlp --ignore-errors --quiet --progress --console-title --no-config-locations --force-overwrites --concurrent-fragments 8 --cookies-from-browser firefox --no-warnings --sleep-interval 5 --max-sleep-interval 60 --add-metadata --compat-options embed-metadata $url --format $format --format-sort $sort --output "$output_dir$output_name"
+    yt-dlp --ignore-errors --quiet --progress --console-title --no-config-locations --force-overwrites --concurrent-fragments 8 --cookies-from-browser safari --no-warnings --sleep-interval 5 --max-sleep-interval 60 --add-metadata --compat-options embed-metadata $url --format $format --format-sort $sort --output "$output_dir$output_name"
   done
-  echo "Done"
+  echo "Done "
 }
 
-## Custom batch download for YouTube (or other video sites), loads from URL list on a Text file
+## Custom batch download for YouTube (or other video sites), loads from URLs list on a Text file
 youtube-batch() {
   output_name="%(webpage_url_domain)s/%(channel,creator,uploader)s | %(title.0:48)s | %(id.0:16)s.%(ext)s"
   output_dir="$HOME/downloads/↪ Terminal/"
@@ -83,7 +83,8 @@ youtube-batch() {
   sort="fps:60,res:1080,hdr:12"
   format='bv*[ext=mp4][vcodec~="^((he|a)vc|h26[45])"]+ba[ext=m4a]/b[ext=mp4]/bv*+ba/b'
 
-   yt-dlp --quiet --progress --console-title --no-config-locations --no-overwrites --concurrent-fragments 2 --cookies-from-browser firefox --no-warnings --add-metadata --compat-options embed-metadata --batch-file $1 --format $format --format-sort $sort --output "$output_dir$output_name"
+   yt-dlp --quiet --progress --console-title --no-config-locations --no-overwrites --concurrent-fragments 2 --cookies-from-browser safari --no-warnings --add-metadata --compat-options embed-metadata --batch-file $1 --format $format --format-sort $sort --output "$output_dir$output_name"
+   echo "Done "
 
 }
 

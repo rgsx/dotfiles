@@ -40,4 +40,4 @@ alias vps-root="ssh vps-root"
 alias vps-torrent="vps-transmission"
 ## Transmission remote CLI on the VPS
 alias vps-torrents="vps-tr -l"
-alias vps-torrent-pull='vps-torrent-sync "Downloads/↪ VPS" --delete'
+alias vps-torrent-pull='vps-torrent-sync "Downloads/↪ Terminal" --delete'
