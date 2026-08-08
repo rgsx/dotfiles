@@ -8,7 +8,7 @@
 	ui = auto
 [core]
 	editor = nvim
-	excludesfile = /Users/robert/.gitignore
+	excludesfile = /Users/robert/.config/git/gitignore
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
@@ -18,6 +18,6 @@
 	program = gpg
 	format = openpgp
 [safe]
-	directory = /Users/robert/.dev/dotfiles
+	directory = *
 [url "git@gnp-gitlab:"]
 	insteadOf = git@gitlab.com:gitgnp/

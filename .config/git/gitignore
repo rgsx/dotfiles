@@ -383,3 +383,12 @@ tramp
 
 .husky
 .husky/
+
+### Cursor / AI tooling ###
+.cursor/
+.agent/
+AGENTS.md
+
+### Vercel / Turbo ###
+.vercel
+.turbo

@@ -10,10 +10,6 @@ brew "bison", link: true
 brew "dfc"
 # Utility to configure multi-display resolutions and arrangements
 brew "displayplacer"
-# Pack, ship and run any application as a lightweight container
-brew "docker"
-# Isolated development environments using Docker
-brew "docker-compose"
 # Select default apps for documents and URL schemes on macOS
 brew "duti"
 # Modern, maintained replacement for ls
@@ -32,10 +28,14 @@ brew "gh"
 brew "git"
 # Quickly rewrite git repository history
 brew "git-filter-repo"
+# Git extension for versioning large files
+brew "git-lfs"
 # GNU Privacy Guard (OpenPGP)
 brew "gnupg"
 # Open source programming language to build simple/reliable/efficient software
 brew "go"
+# Self-improving AI agent that creates skills from experience
+brew "hermes-agent"
 # Simple terminal UI for git commands
 brew "lazygit"
 # Terminal file manager
@@ -64,6 +64,8 @@ brew "ripgrep"
 brew "shfmt"
 # Cross-shell prompt for astronauts
 brew "starship"
+# CLI tool that moves files or folder to the trash
+brew "trash"
 # Display directories as trees (with optional color/HTML output)
 brew "tree"
 # Extremely fast Python package installer and resolver, written in Rust
@@ -78,19 +80,29 @@ brew "zoxide"
 brew "zsh-history-substring-search"
 # Incredibly fast JavaScript runtime, bundler, transpiler and package manager - all in one.
 brew "oven-sh/bun/bun"
+# Write, edit, and chat about your code with AI
+cask "cursor"
+# Command-line agent for Cursor
+cask "cursor-cli"
+# App to build and share containerised applications and microservices
+cask "docker-desktop"
 cask "font-jetbrains-mono-nerd-font"
 cask "font-monaspice-nerd-font"
+# Open-source desktop AI agent
+cask "hermes-desktop"
 # Utility to hide menu bar items
 cask "hiddenbar"
+# JetBrains tools manager
+cask "jetbrains-toolbox"
+# Clipboard manager
+cask "maccy"
+# Collaboration platform for API development
+cask "postman"
 # Open-source application manager and system cleaner
 cask "puremac"
 # Thumbnails, static previews, cover art and metadata for video files
 cask "quicklook-video"
+# Control your tools with a few keystrokes
+cask "raycast"
 # Open-source version of the X.Org X Window System
 cask "xquartz"
-vscode "anysphere.remote-containers"
-vscode "anysphere.remote-ssh"
-vscode "catppuccin.catppuccin-vsc"
-vscode "catppuccin.catppuccin-vsc-icons"
-vscode "catppuccin.catppuccin-vsc-pack"
-npm "corepack"

@@ -11,13 +11,13 @@ Host github.com
 Host vps
   HostName 168.231.69.27
   User roberto
-  IdentityFile ~/.ssh/id_ed25519
+  IdentityFile ~/.ssh/macbook_pro/macbook_pro_vps
   IdentitiesOnly yes
   StrictHostKeyChecking accept-new
 
 Host vps-root
   HostName 168.231.69.27
   User root
-  IdentityFile ~/.ssh/id_ed25519
+  IdentityFile ~/.ssh/macbook_pro/macbook_pro_vps
   IdentitiesOnly yes
   StrictHostKeyChecking accept-new

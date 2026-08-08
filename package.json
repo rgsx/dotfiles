@@ -1,0 +1,12 @@
+{
+  "name": "dotfiles",
+  "private": true,
+  "description": "Volta toolchain pins for dotfiles bootstrap",
+  "volta": {
+    "node": "24.19.0",
+    "npm": "11.4.2"
+  },
+  "devDependencies": {
+    "@angular/cli": "19.2.15"
+  }
+}

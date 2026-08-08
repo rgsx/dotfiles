@@ -1,0 +1,8 @@
+{
+  "editor.fontFamily": "MonaspiceNe Nerd Font",
+  "editor.fontSize": 14,
+  "window.autoDetectColorScheme": true,
+  "workbench.iconTheme": "catppuccin-mocha",
+  "cursor.composer.shouldChimeAfterChatFinishes": true,
+  "workbench.preferredLightColorTheme": "Cursor Dark Midnight"
+}
