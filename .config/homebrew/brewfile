@@ -88,6 +88,8 @@ cask "cursor-cli"
 cask "docker-desktop"
 cask "font-jetbrains-mono-nerd-font"
 cask "font-monaspice-nerd-font"
+cask "gitkraken"
+cask "gitkraken-cli"
 # Open-source desktop AI agent
 cask "hermes-desktop"
 # Utility to hide menu bar items
@@ -106,3 +108,4 @@ cask "quicklook-video"
 cask "raycast"
 # Open-source version of the X.Org X Window System
 cask "xquartz"
+
