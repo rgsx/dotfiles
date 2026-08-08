@@ -1,11 +1,9 @@
-Include /Users/roberto/.config/colima/ssh_config
-
 # Personal GitHub (existing default key)
 Host github.com
   HostName ssh.github.com
   Port 443
   User git
-  IdentityFile ~/.ssh/id_ed25519
+  IdentityFile ~/.ssh/macbook_air/macbook_air
   IdentitiesOnly yes
   AddKeysToAgent yes
   UseKeychain yes
@@ -14,7 +12,7 @@ Host github.com
 Host gtec
   HostName git.gtec.com.mx
   User git
-  IdentityFile ~/.ssh/id_ed25519_gtec
+  IdentityFile ~/.ssh/macbook_air/macbook_air_gtec
   IdentitiesOnly yes
   AddKeysToAgent yes
   UseKeychain yes
@@ -23,7 +21,8 @@ Host gtec
 Host gnp-gitlab
   HostName gitlab.com
   User git
-  IdentityFile ~/.ssh/id_ed25519_gnp
+  IdentityFile ~/.ssh/macbook_air/macbook_air_gnp
   IdentitiesOnly yes
   AddKeysToAgent yes
   UseKeychain yes
+  

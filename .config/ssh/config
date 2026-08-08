@@ -1,43 +1,4 @@
-Include /Users/roberto/.config/colima/ssh_config
+# Comment out the correct config
+Include ~/.ssh/macbook_air/macbook_air_config
+#Include ~/.ssh/macbook_pro/macbook_pro_config
 
-# Personal GitHub (existing default key)
-Host github.com
-  HostName ssh.github.com
-  Port 443
-  User git
-  IdentityFile ~/.ssh/id_ed25519
-  IdentitiesOnly yes
-  AddKeysToAgent yes
-  UseKeychain yes
-
-# GTEC (GitLab/Gitea-style server on your corporate domain)
-Host gtec
-  HostName git.gtec.com.mx
-  User git
-  IdentityFile ~/.ssh/id_ed25519_gtec
-  IdentitiesOnly yes
-  AddKeysToAgent yes
-  UseKeychain yes
-
-# GNP on gitlab.com (use a host ALIAS so it picks this key)
-Host gnp-gitlab
-  HostName gitlab.com
-  User git
-  IdentityFile ~/.ssh/id_ed25519_gnp
-  IdentitiesOnly yes
-  AddKeysToAgent yes
-  UseKeychain yes
-
-Host vps
-  HostName 168.231.69.27
-  User roberto
-  IdentityFile ~/.ssh/id_ed25519
-  IdentitiesOnly yes
-  StrictHostKeyChecking accept-new
-
-Host vps-root
-  HostName 168.231.69.27
-  User root
-  IdentityFile ~/.ssh/id_ed25519
-  IdentitiesOnly yes
-  StrictHostKeyChecking accept-new

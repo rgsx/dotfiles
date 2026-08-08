@@ -75,4 +75,4 @@ compinit
 # End of Docker CLI completions
 
 # Added by codebase-memory-mcp install
-export PATH="/Users/roberto/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"

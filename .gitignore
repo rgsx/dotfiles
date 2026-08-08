@@ -71,6 +71,13 @@ pids/
 *~
 *.stackdump
 
+### SSH private keys ###
+.config/ssh/**/*
+!.config/ssh/config
+!.config/ssh/**/**_config
+!.config/ssh/known_hosts
+!.config/ssh/**/*.pub
+
 ### environment and secrets ###
 .env
 .env.local
