@@ -1,4 +1,4 @@
 # Comment out the correct config
-Include ~/.ssh/macbook_air/macbook_air_config
-#Include ~/.ssh/macbook_pro/macbook_pro_config
+#Include ~/.ssh/macbook_air/macbook_air_config
+Include ~/.ssh/macbook_pro/macbook_pro_config
 

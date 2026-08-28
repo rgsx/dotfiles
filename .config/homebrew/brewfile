@@ -34,6 +34,8 @@ brew "git-lfs"
 brew "gnupg"
 # Open source programming language to build simple/reliable/efficient software
 brew "go"
+# Search tool like grep and The Silver Searcher
+brew "ripgrep"
 # Self-improving AI agent that creates skills from experience
 brew "hermes-agent"
 # Simple terminal UI for git commands
@@ -58,8 +60,6 @@ brew "pkgconf"
 brew "pv"
 # Command-line YAML and XML processor that wraps jq
 brew "python-yq"
-# Search tool like grep and The Silver Searcher
-brew "ripgrep"
 # Autoformat shell script source code
 brew "shfmt"
 # Cross-shell prompt for astronauts
@@ -86,10 +86,18 @@ cask "cursor"
 cask "cursor-cli"
 # App to build and share containerised applications and microservices
 cask "docker-desktop"
+# Web browser
+cask "firefox"
 cask "font-jetbrains-mono-nerd-font"
 cask "font-monaspice-nerd-font"
+# Terminal emulator that uses platform-native UI and GPU acceleration
+cask "ghostty"
+# Git client focusing on productivity
 cask "gitkraken"
+# CLI for GitKraken
 cask "gitkraken-cli"
+# Web browser
+cask "google-chrome"
 # Open-source desktop AI agent
 cask "hermes-desktop"
 # Utility to hide menu bar items
@@ -106,6 +114,11 @@ cask "puremac"
 cask "quicklook-video"
 # Control your tools with a few keystrokes
 cask "raycast"
+# System monitor for the menu bar
+cask "stats"
+# Native desktop client for WhatsApp
+cask "whatsapp"
 # Open-source version of the X.Org X Window System
 cask "xquartz"
-
+vscode "anysphere.remote-containers"
+vscode "anysphere.remote-ssh"
