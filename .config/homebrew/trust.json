@@ -4,5 +4,8 @@
     "https://github.com/jundot/omlx",
     "muxy-app/tap",
     "oven-sh/bun"
+  ],
+  "trustedformulae": [
+    "oven-sh/bun/bun"
   ]
 }

@@ -79,7 +79,7 @@ brew "zoxide"
 # Zsh port of Fish shell's history search
 brew "zsh-history-substring-search"
 # Incredibly fast JavaScript runtime, bundler, transpiler and package manager - all in one.
-brew "oven-sh/bun/bun"
+brew "oven-sh/bun/bun", trusted: true
 # Write, edit, and chat about your code with AI
 cask "cursor"
 # Command-line agent for Cursor

@@ -19,5 +19,6 @@
 	format = openpgp
 [safe]
 	directory = *
+	directory = /Users/robert/.dev/_meta/dotfiles
 [url "git@gnp-gitlab:"]
 	insteadOf = git@gitlab.com:gitgnp/
