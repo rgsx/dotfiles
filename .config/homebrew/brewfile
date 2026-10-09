@@ -20,6 +20,8 @@ brew "fastfetch"
 brew "fd"
 # Play, record, convert, and stream select audio and video codecs
 brew "ffmpeg"
+# Command-line outline and bitmap font editor/converter
+brew "fontforge"
 # Command-line fuzzy finder written in Go
 brew "fzf"
 # GitHub command-line tool
@@ -80,6 +82,12 @@ brew "zoxide"
 brew "zsh-history-substring-search"
 # Incredibly fast JavaScript runtime, bundler, transpiler and package manager - all in one.
 brew "oven-sh/bun/bun", trusted: true
+# Application uninstaller
+cask "appcleaner"
+# Tool to flash OS images to SD cards & USB drives
+cask "balenaetcher"
+# OpenAI's official ChatGPT desktop app
+cask "chatgpt"
 # Write, edit, and chat about your code with AI
 cask "cursor"
 # Command-line agent for Cursor
@@ -98,12 +106,12 @@ cask "gitkraken"
 cask "gitkraken-cli"
 # Web browser
 cask "google-chrome"
-# Open-source desktop AI agent
-cask "hermes-desktop"
 # Utility to hide menu bar items
 cask "hiddenbar"
 # JetBrains tools manager
 cask "jetbrains-toolbox"
+# File archiver
+cask "keka"
 # Clipboard manager
 cask "maccy"
 # Collaboration platform for API development
@@ -116,9 +124,29 @@ cask "quicklook-video"
 cask "raycast"
 # System monitor for the menu bar
 cask "stats"
+# Open-source BitTorrent client
+cask "transmission"
 # Native desktop client for WhatsApp
 cask "whatsapp"
 # Open-source version of the X.Org X Window System
 cask "xquartz"
+vscode "aaron-bond.better-comments"
+vscode "ahmedsamir.cognitive-lens"
+vscode "angular.ng-template"
+vscode "antfu.icons-carbon"
 vscode "anysphere.remote-containers"
 vscode "anysphere.remote-ssh"
+vscode "caspiantools.caspian-notes"
+vscode "catppuccin.catppuccin-vsc"
+vscode "catppuccin.catppuccin-vsc-icons"
+vscode "catppuccin.catppuccin-vsc-pack"
+vscode "eamodio.gitlens"
+vscode "enkia.tokyo-night"
+vscode "esbenp.prettier-vscode"
+vscode "hyperb1iss.silkcircuit-theme"
+vscode "monosen.neomono"
+vscode "ni3rav.andromeda-night"
+vscode "pankajghosh.nexus-dark"
+vscode "usernamehw.errorlens"
+vscode "znck.vue"
+uv "browser-use"

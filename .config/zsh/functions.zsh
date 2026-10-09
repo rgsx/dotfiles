@@ -424,3 +424,93 @@ git-host() {
   host="${host#*@}"
   print -r -- "$host"
 }
+
+woff2otf() {
+  emulate -L zsh
+  setopt extended_glob no_unset
+
+  local -a o_out o_force o_dry o_rec o_help
+  zparseopts -D -E -F -- o:=o_out f=o_force n=o_dry r=o_rec h=o_help -help=o_help || return 2
+
+  if (( $#o_help || $# == 0 )); then
+    print -r -- "usage: woff2otf [-f] [-n] [-r] [-o DIR] FILE|DIR ...
+  -o DIR  write .otf files to DIR (default: next to each input)
+  -f      overwrite existing .otf files
+  -n      dry run, only print what would be converted
+  -r      search directories recursively"
+    (( $#o_help )) && return 0 || return 2
+  fi
+
+  if (( ! $+commands[fontforge] )); then
+    print -u2 "woff2otf: fontforge not found (macOS: brew install fontforge)"
+    return 127
+  fi
+
+  local outdir=${${o_out[-1]:-}#-o}
+  if [[ -n $outdir ]] && (( ! $#o_dry )); then
+    mkdir -p -- "$outdir" || return 1
+  fi
+
+  local -a inputs
+  local arg
+  for arg in "$@"; do
+    if [[ -d $arg ]]; then
+      if (( $#o_rec )); then
+        inputs+=( $arg/**/*.(#i)woff2(N.) )
+      else
+        inputs+=( $arg/*.(#i)woff2(N.) )
+      fi
+    elif [[ -f $arg ]]; then
+      inputs+=( $arg )
+    else
+      print -u2 -r -- "woff2otf: not found: $arg"
+    fi
+  done
+
+  if (( ! $#inputs )); then
+    print -u2 "woff2otf: no .woff2 files to convert"
+    return 1
+  fi
+
+  local in out tmp dir log
+  local -a lines
+  integer ok=0 skipped=0 failed=0
+  for in in $inputs; do
+    if [[ ${in:e:l} != woff2 ]]; then
+      print -u2 -r -- "skip (not .woff2): $in"
+      (( skipped++ )); continue
+    fi
+
+    dir=${outdir:-${in:h}}
+    out=$dir/${in:t:r}.ttf
+
+    if [[ -e $out ]] && (( ! $#o_force )); then
+      print -u2 -r -- "skip (exists, use -f): $out"
+      (( skipped++ )); continue
+    fi
+
+    if (( $#o_dry )); then
+      print -r -- "$in -> $out"
+      continue
+    fi
+
+    # Write to a temp file first so a failed run never leaves a broken .otf behind.
+    tmp=$dir/.${in:t:r}.$$.otf
+    log=$(fontforge -quiet -lang=ff -c 'Open($1); Generate($2); Close()' "$in" "$tmp" 2>&1)
+    if (( $? == 0 )) && [[ -s $tmp ]] && mv -f -- "$tmp" "$out"; then
+      print -r -- "ok: $out"
+      (( ok++ ))
+    else
+      rm -f -- "$tmp"
+      print -u2 -r -- "FAILED: $in"
+      # Show FontForge's own error, minus its startup chatter.
+      lines=( ${(f)log} )
+      lines=( ${lines:#(PythonUI_Init*|copyUIMethodsToBaseTable*|Program root:*)} )
+      (( $#lines )) && print -u2 -rl -- ${lines/#/    }
+      (( failed++ ))
+    fi
+  done
+
+  (( $#o_dry )) || print -r -- "done: $ok converted, $skipped skipped, $failed failed"
+  (( failed == 0 ))
+}
