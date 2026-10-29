@@ -1,0 +1,638 @@
+# Functions
+
+## Creates a folder and navigates (cd) to it
+folder() {
+  mkdir $1
+  cd $1
+}
+
+## Creates a folder for each file passed with it's name and then moves it
+mkdir-move() {
+  for file in "$@"; do
+    [ -f "$file" ] || continue  # skip if not a file
+    dirname="${file%.*}"
+    mkdir -p -- "$dirname"
+    mv -- "$file" "$dirname"/
+  done
+}
+
+## Tree view for current folder with all info
+list() {
+  eza -1lTA --level=1 --classify=always --color=auto --icons=always --hyperlink=auto --sort=type --git --no-permissions --no-user --no-time --group-directories-first . $1
+  }
+
+## Safe delete with trash
+delete() {
+  local args=()
+  for arg in "$@"; do
+    case "$arg" in
+      -r|-f|-rf|-fr) ;;   # ignore these flags
+      *) args+=("$arg") ;;
+    esac
+  done
+  if [ ${#args[@]} -eq 0 ]; then
+    echo "delete: missing operand" >&2
+    return 1
+  fi
+  trash --stopOnError "${args[@]}";
+}
+
+## List and shows folders on curent Dir by size, or specific folder by name
+dirsize() {
+  if [ -z "$1" ]; then
+    du -sh ./*
+  else
+    du -sh "$@"
+  fi | sort -hr
+}
+
+## Backup DIR or File(s) to Zip 
+backup() {
+  if [ $# -lt 1 ]; then
+    echo "Usage: backupZip <path...>";
+    return 1;
+  fi;
+
+  local timestamp=$(date +"%Y%m%d_%H%M%S");
+  local out="backup_${timestamp}.zip";
+
+  # -r handles directories; files are added normally
+  zip -r "$out" "$@" >/dev/null;
+
+  echo "Backup created: $out";
+};
+
+## Custom YouTube download fucntion (yt-dlp) - works for other video sites 
+youtube() {
+  for url in "$@"; do
+    output_name="%(webpage_url_domain)s/%(channel,creator,uploader)s | %(title.0:48)s | %(id.0:16)s.%(ext)s"
+    output_dir="$HOME/downloads/↪ Terminal/"
+    sort="fps:60,res:1080,hdr:12"
+    format='bv*[ext=mp4][vcodec~="^((he|a)vc|h26[45])"]+ba[ext=m4a]/b[ext=mp4]/bv*+ba/b'
+    #--trim-filenames 128
+    yt-dlp --ignore-errors --quiet --progress --console-title --no-config-locations --force-overwrites --concurrent-fragments 8 --cookies-from-browser firefox --no-warnings --sleep-interval 5 --max-sleep-interval 60 --add-metadata --compat-options embed-metadata $url --format $format --format-sort $sort --output "$output_dir$output_name"
+  done
+  echo "Done "
+}
+
+## Custom batch download for YouTube (or other video sites), loads from URLs list on a Text file
+youtube-batch() {
+  output_name="%(webpage_url_domain)s/%(channel,creator,uploader)s | %(title.0:48)s | %(id.0:16)s.%(ext)s"
+  output_dir="$HOME/downloads/↪ Terminal/"
+# output_dir="/Volumes/External/Library/Webseries/"
+  sort="fps:60,res:1080,hdr:12"
+  format='bv*[ext=mp4][vcodec~="^((he|a)vc|h26[45])"]+ba[ext=m4a]/b[ext=mp4]/bv*+ba/b'
+
+   yt-dlp --quiet --progress --console-title --no-config-locations --no-overwrites --concurrent-fragments 2 --cookies-from-browser safari --no-warnings --add-metadata --compat-options embed-metadata --batch-file $1 --format $format --format-sort $sort --output "$output_dir$output_name"
+   echo "Done "
+
+}
+
+## Custom Intagram downloader function, downloads and converts for iOS/macOS full compatibility
+instagram() {
+  for url in "$@"; do
+    output_file="%(channel,creator,uploader)s | %(title.0:48)s | %(id.0:16)s.%(ext)s"
+    output_dir="$HOME/downloads/↪ Terminal/instagram.com/"
+    download_file=$(yt-dlp --quiet --progress --console-title --no-config-locations --force-overwrites --concurrent-fragments 8 --restrict-filenames --cookies-from-browser safari --no-warnings $url --format 'bv*+ba/b' --output "$output_dir$output_file" --print after_move:filepath)
+    to_convert="$(basename "$download_file")"
+    #echo $to_convert
+    ffmpeg -i "$output_dir$to_convert" -c:v libx265 -tag:v hvc1 -crf 20 -pix_fmt yuv420p10le -c:a aac -b:a 160k "$output_dir${to_convert%.*} | converted.mp4" > /dev/null 2>&1
+    echo "Done "
+  done
+}
+
+## Convert video to an iOS compatible mp4
+convertToMp4() {
+ ffmpeg -i "$1" -c:v libx265 -tag:v hvc1 -crf 20 -pix_fmt yuv420p10le -c:a aac -b:a 160k "${1%.*} | converted.mp4" 
+}
+
+## Homebrew full maintance function
+brewup() {
+  export PATH="/opt/homebrew/bin:$PATH"
+  # Colours
+  local red="\033[0;31m"
+  local green="\033[0;32m"
+  local yellow="\033[1;33m"
+  local reset="\033[0m"
+  local checkmark=""
+  local crossmark="✖"
+  # Paths
+  local BUNDLE_DIR="$XDG_CONFIG_HOME/homebrew"
+  local BUNDLE_PATH="$BUNDLE_DIR/brewfile"
+  # Helper to run and report
+  run_step() {
+    local message="$1"
+    shift
+    echo -n "${green}${message} ${reset} "
+    # Capture both stdout and stderr
+    local output
+    output="$("$@" 2>&1)"
+    local exit_code=$?
+    if [[ $exit_code -eq 0 ]]; then
+      echo "${green}${checkmark}${reset}"
+    else
+      echo "${red}${crossmark} (failed)${reset}"
+      echo "${red}${output}${reset}"
+      return $status
+    fi
+  }
+  # Ensure directory exists
+  if [[ ! -d "$BUNDLE_DIR" ]]; then
+    echo "${yellow}Creating config dir at ${BUNDLE_DIR}${reset}"
+    mkdir -p "$BUNDLE_DIR" || {
+      echo "${red}${crossmark}Failed to create directory${reset}"
+      return 1
+    }
+  fi
+  run_step "Running brew diagnostics" brew doctor
+  run_step "Checking for missing dependencies" brew missing
+  run_step "Updating brew" brew update
+  run_step "Checking outdated packages" brew outdated
+  run_step "Upgrading packages" brew upgrade
+  run_step "Cleaning up" brew cleanup -s
+  run_step "Saving Brewfile" \
+    brew bundle dump --file="$BUNDLE_PATH" --force
+  echo "${green}Brew complete  ${reset}"
+}
+
+## Sets development files on macOS to be open by VSCode as default 
+setDevFileTypesOld() {
+curl "https://raw.githubusercontent.com/github/linguist/master/lib/linguist/languages.yml" | yq -r "to_entries | (map(.value.extensions) | flatten) - [null] | unique | .[]" | xargs -L 1 -I "{}" duti -s com.microsoft.VSCode {} all 2>&1
+echo "Done  "
+}
+
+## Set dev file types on macOS to open with a given editor (Cursor by default)
+setDevFileTypes() {
+  local APP_NAME="${1:-Cursor}";
+  local BID;
+
+  # Ensure deps exist
+  for bin in curl yq duti osascript; do
+    command -v "$bin" >/dev/null 2>&1 || { echo "Missing '$bin'. Install it first (brew install $bin);"; return 1; };
+  done;
+
+  # Resolve the bundle identifier dynamically
+  BID="$(osascript -e "id of app \"${APP_NAME}\"" 2>/dev/null)" || { echo "App '${APP_NAME}' not found. Is it installed?"; return 1; };
+
+  echo "Using ${APP_NAME} (${BID}) as default for dev file types…";
+
+  # Pull extensions from linguist and assign via duti
+  curl -fsSL "https://raw.githubusercontent.com/github/linguist/master/lib/linguist/languages.yml" \
+  | yq -r "to_entries | (map(.value.extensions) | flatten) - [null] | unique | .[]" \
+  | xargs -L 1 -I "{}" duti -s "${BID}" {} all 2>&1;
+
+  echo "Done  ";
+};
+
+## Complete Fuzzy finder UI with code highlight previews
+fuzz(){
+  git ls-files | fzf -m --style full \
+    --input-label ' Search ' --header-label ' File Type ' \
+    --preview 'fzf-preview.sh {}' \
+    --bind 'result:transform-list-label:
+        if [[ -z $FZF_QUERY ]]; then
+          echo " $FZF_MATCH_COUNT items "
+        else
+          echo " $FZF_MATCH_COUNT matches for [$FZF_QUERY] "
+        fi
+        ' \
+    --bind 'focus:transform-preview-label:[[ -n {} ]] && printf " Previewing [%s] " {}' \
+    --bind 'focus:+transform-header:file --brief {} || echo "No file selected"' \
+    --bind 'ctrl-r:change-list-label( Reloading the list )+reload(sleep 2; git ls-files)' \
+    --bind  'enter:become(nvim {+})' \
+    --color 'border:#9399ba,label:#bac2de' \
+    --color 'preview-border:#9399b2,preview-label:#bac2de' \
+    --color 'list-border:#9399b2,list-label:#bac2de' \
+    --color 'input-border:#9399b2,input-label:#bac2de' \
+    --color 'header-border:#9399b2,header-label:#bac2de'
+}
+
+## Function to search and delete from the ZSH History
+delhist() {
+  local force=0;
+  while getopts ":f" opt; do
+    case "$opt" in
+      f) force=1;;
+      *) echo "Usage: delhist [-f] <string>"; return 1;;
+    esac;
+  done;
+  shift $((OPTIND-1));
+
+  if [ -z "$1" ]; then
+    echo "Usage: delhist [-f] <string>";
+    return 1;
+  fi;
+
+  local pattern="$1";
+  local file="$HOME/.zsh_history";
+
+  # Show matches (literal search)
+  local matches;
+  matches=$(grep -n -F -- "$pattern" "$file");
+  if [ -z "$matches" ]; then
+    echo "No matches found for: $pattern";
+    return 0;
+  fi;
+
+  echo "Found matches:";
+  echo "$matches";
+
+  if [ "$force" -ne 1 ]; then
+    echo -n "Delete these entries? [y/N]: ";
+    read -r answer;
+    case "$answer" in
+      [yY]|[yY][eE][sS]) ;;
+      *) echo "Aborted."; return 0;;
+    esac;
+  fi;
+
+  # Backup
+  cp "$file" "$file.bak";
+
+  # Escape for sed delimiter and slashes
+  local esc="$pattern";
+  esc=${esc//\\/\\\\};   # backslashes
+  esc=${esc//|/\\|};     # delimiter
+  esc=${esc//\//\\/};    # slashes
+
+  # Delete & reload (macOS sed needs -i '')
+  LC_ALL=C sed -i '' "/$esc/d" "$file";
+  fc -R "$file";
+  echo "Deleted entries containing: $pattern";
+}
+
+## Open Transmission Web UI on the VPS through a local SSH tunnel
+vps-transmission() {
+  local port="${1:-9091}"
+  local url="http://127.0.0.1:${port}/transmission/web/"
+
+  if ! lsof -nP -iTCP:"$port" -sTCP:LISTEN >/dev/null 2>&1; then
+    ssh -fN -L "${port}:127.0.0.1:9091" vps || return 1
+  fi
+
+  open "$url"
+  echo "Transmission Web UI: $url"
+}
+
+## Stop the local SSH tunnel for the VPS Transmission Web UI
+vps-transmission-stop() {
+  local port="${1:-9091}"
+  pkill -f "ssh .*${port}:127.0.0.1:9091.*vps" 2>/dev/null || true
+}
+
+## Run transmission-remote against the VPS daemon
+vps-tr() {
+  ssh vps transmission-remote 127.0.0.1:9091 "$@"
+}
+
+## Add one or more torrent URLs/files/magnets to the VPS daemon
+vps-tr-add() {
+  if [ $# -eq 0 ]; then
+    echo "Usage: vps-tr-add <torrent-url|magnet|path> [...]" >&2
+    return 1
+  fi
+  vps-tr -a "$@"
+}
+
+## Pull completed VPS torrents to local Downloads with confirmation
+vps-torrent-sync() {
+  if [[ $# -lt 1 || $1 == -* ]]; then
+    echo "Usage: vps-torrent-pull <local-destination> [--delete]" >&2
+    return 1
+  fi
+
+  local dest="$1"
+  local delete_after=0
+  if [[ "${2:-}" == "--delete" ]]; then
+    delete_after=1
+  fi
+
+  local remote_dir="/home/roberto/downloads/torrents/complete"
+  local remote_list
+  remote_list=$(ssh vps "find ${remote_dir} -mindepth 1 -maxdepth 1 -printf '%f\n' 2>/dev/null" 2>/dev/null)
+
+  if [[ -z "$remote_list" ]]; then
+    echo "No completed torrents found on VPS."
+    return 0
+  fi
+
+  mkdir -p "$dest"
+  echo "Syncing from: ${remote_dir}"
+  echo "Syncing to  : ${dest}"
+  echo
+  echo "Files to download:"
+  echo "$remote_list"
+  echo
+  echo "DRY RUN:"
+  rsync -ahn --progress --ignore-existing -e ssh "vps:${remote_dir}/" "${dest}/"
+  echo
+  echo "Summary:"
+  echo "$remote_list" | wc -l | tr -d ' ' | xargs -I{} echo "{} files queued."
+
+  if [[ $delete_after -eq 1 ]]; then
+    echo
+    echo "This will DELETE the source files from the VPS after copy."
+  fi
+
+  echo
+  read -q "REPLY?Continue with copy? [y/N]: "
+  echo
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    echo "Aborted."
+    return 1
+  fi
+
+  rsync -avh --progress --ignore-existing -e ssh "vps:${remote_dir}/" "${dest}/"
+  local rc=$?
+  if [[ $rc -ne 0 ]]; then
+    echo "rsync failed with exit code ${rc}" >&2
+    return $rc
+  fi
+
+  echo
+  echo "Verifying copied files..."
+  local failed=0
+  while IFS= read -r file; do
+    [[ -z "$file" ]] && continue
+    if [[ ! -f "${dest}/${file}" ]]; then
+      echo "MISSING LOCAL : ${dest}/${file}" >&2
+      failed=1
+    else
+      echo "OK LOCAL      : ${dest}/${file}"
+    fi
+  done <<< "$remote_list"
+
+  if [[ $failed -ne 0 ]]; then
+    echo "Verification failed; source files were NOT deleted." >&2
+    return 1
+  fi
+
+  if [[ $delete_after -eq 1 ]]; then
+    echo
+    read -q "REPLY?Delete source files from VPS? [y/N]: "
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+      echo "Source files kept on VPS."
+      return 0
+    fi
+
+    ssh vps "cd '${remote_dir}' && rm -f ${(f)remote_list}" || {
+      echo "Remote delete failed; check VPS manually." >&2
+      return 1
+    }
+    echo "Deleted source files from VPS."
+  fi
+
+  echo
+  echo "Done."
+  echo "Local  : ${dest}"
+  echo "Remote : ${remote_dir}"
+}
+
+change-hostname() {
+  local new_hostname="$1"
+  if [[ -z "$new_hostname" ]]; then
+    echo "Usage: change-hostname <new-hostname>" >&2
+    return 1
+  fi
+
+  echo "Changing hostname to: $new_hostname"
+
+  if [[ "$OSTYPE" == darwin* ]]; then
+    sudo scutil --set HostName "$new_hostname"
+    sudo scutil --set ComputerName "$new_hostname"
+    sudo scutil --set LocalHostName "$new_hostname"
+    dscacheutil -flushcache
+    echo "Hostname updated on macOS."
+  elif [[ "$OSTYPE" == linux-gnu* ]]; then
+    sudo hostnamectl set-hostname "$new_hostname"
+    echo "Hostname updated on Linux."
+  else
+    echo "Unsupported OS." >&2
+    return 1
+  fi
+}
+
+git-host() {
+  local url host
+  url=$(git config --get remote.origin.url 2>/dev/null || git ls-remote --get-url 2>/dev/null || true)
+  [[ -z "$url" ]] && { echo "no remote"; return 1; }
+  case "$url" in
+    *://*) host="${url#*://}"; host="${host%%/*}" ;;
+    *)     host="${url%%:*}" ;;
+  esac
+  host="${host#*@}"
+  print -r -- "$host"
+}
+
+woff2otf() {
+  emulate -L zsh
+  setopt extended_glob no_unset
+
+  local -a o_out o_force o_dry o_rec o_help
+  zparseopts -D -E -F -- o:=o_out f=o_force n=o_dry r=o_rec h=o_help -help=o_help || return 2
+
+  if (( $#o_help || $# == 0 )); then
+    print -r -- "usage: woff2otf [-f] [-n] [-r] [-o DIR] FILE|DIR ...
+  -o DIR  write .otf files to DIR (default: next to each input)
+  -f      overwrite existing .otf files
+  -n      dry run, only print what would be converted
+  -r      search directories recursively"
+    (( $#o_help )) && return 0 || return 2
+  fi
+
+  if (( ! $+commands[fontforge] )); then
+    print -u2 "woff2otf: fontforge not found (macOS: brew install fontforge)"
+    return 127
+  fi
+
+  local outdir=${${o_out[-1]:-}#-o}
+  if [[ -n $outdir ]] && (( ! $#o_dry )); then
+    mkdir -p -- "$outdir" || return 1
+  fi
+
+  local -a inputs
+  local arg
+  for arg in "$@"; do
+    if [[ -d $arg ]]; then
+      if (( $#o_rec )); then
+        inputs+=( $arg/**/*.(#i)woff2(N.) )
+      else
+        inputs+=( $arg/*.(#i)woff2(N.) )
+      fi
+    elif [[ -f $arg ]]; then
+      inputs+=( $arg )
+    else
+      print -u2 -r -- "woff2otf: not found: $arg"
+    fi
+  done
+
+  if (( ! $#inputs )); then
+    print -u2 "woff2otf: no .woff2 files to convert"
+    return 1
+  fi
+
+  local in out tmp dir log
+  local -a lines
+  integer ok=0 skipped=0 failed=0
+  for in in $inputs; do
+    if [[ ${in:e:l} != woff2 ]]; then
+      print -u2 -r -- "skip (not .woff2): $in"
+      (( skipped++ )); continue
+    fi
+
+    dir=${outdir:-${in:h}}
+    out=$dir/${in:t:r}.ttf
+
+    if [[ -e $out ]] && (( ! $#o_force )); then
+      print -u2 -r -- "skip (exists, use -f): $out"
+      (( skipped++ )); continue
+    fi
+
+    if (( $#o_dry )); then
+      print -r -- "$in -> $out"
+      continue
+    fi
+
+    # Write to a temp file first so a failed run never leaves a broken .otf behind.
+    tmp=$dir/.${in:t:r}.$$.otf
+    log=$(fontforge -quiet -lang=ff -c 'Open($1); Generate($2); Close()' "$in" "$tmp" 2>&1)
+    if (( $? == 0 )) && [[ -s $tmp ]] && mv -f -- "$tmp" "$out"; then
+      print -r -- "ok: $out"
+      (( ok++ ))
+    else
+      rm -f -- "$tmp"
+      print -u2 -r -- "FAILED: $in"
+      # Show FontForge's own error, minus its startup chatter.
+      lines=( ${(f)log} )
+      lines=( ${lines:#(PythonUI_Init*|copyUIMethodsToBaseTable*|Program root:*)} )
+      (( $#lines )) && print -u2 -rl -- ${lines/#/    }
+      (( failed++ ))
+    fi
+  done
+
+  (( $#o_dry )) || print -r -- "done: $ok converted, $skipped skipped, $failed failed"
+  (( failed == 0 ))
+}
+
+# Downmix 5.1 AC-3 files to stereo FLAC (24-bit) with one album-wide gain,
+# so the loudest track peaks at the target and the balance between tracks is kept.
+ac3tostereo() {
+  emulate -L zsh
+  setopt extended_glob no_unset
+
+  local -a o_out o_force o_dry o_peak o_artist o_album o_year o_help
+  zparseopts -D -E -F -- o:=o_out p:=o_peak a:=o_artist A:=o_album y:=o_year \
+    f=o_force n=o_dry h=o_help -help=o_help || return 2
+
+  if (( $#o_help || $# == 0 )); then
+    print -r -- "usage: ac3tostereo [-f] [-n] [-p PEAK] [-o DIR] [-a ARTIST] [-A ALBUM] [-y YEAR] FILE|DIR ...
+  -o DIR     write .flac files to DIR (default: FLAC/ next to each input)
+  -p PEAK    target peak in dB for the loudest track (default: -1.0)
+  -a/-A/-y   artist, album and year tags
+  -f         overwrite existing .flac files
+  -n         dry run, only measure and print the gain"
+    (( $#o_help )) && return 0 || return 2
+  fi
+  (( $+commands[ffmpeg] )) || { print -u2 "ac3tostereo: ffmpeg not found (brew install ffmpeg)"; return 127; }
+
+  local -a inputs; local arg
+  for arg in "$@"; do
+    if [[ -d $arg ]]; then inputs+=( $arg/*.(#i)ac3(N.) )
+    elif [[ -f $arg ]]; then inputs+=( $arg )
+    else print -u2 -r -- "ac3tostereo: not found: $arg"; fi
+  done
+  (( $#inputs )) || { print -u2 "ac3tostereo: no .ac3 files"; return 1; }
+
+  # Pass 1: find the loudest peak of the decoder's stereo downmix across all files.
+  typeset -F 1 target=${${o_peak[-1]:-}#-p} max=-200 p gain
+  [[ -n ${o_peak[-1]:-} ]] || target=-1.0
+  local in
+  for in in $inputs; do
+    p=$(ffmpeg -hide_banner -nostdin -downmix stereo -i "$in" -af volumedetect -f null - 2>&1 \
+        | awk '/max_volume/ {print $5}')
+    print -r -- "peak ${p} dB: ${in:t}"
+    (( p > max )) && max=$p
+  done
+  (( gain = target - max ))
+  print -r -- "album gain: ${gain} dB (loudest peak ${max} dB -> ${target} dB)"
+  (( $#o_dry )) && return 0
+
+  # Pass 2: encode with the shared gain.
+  local outdir out title track n=0 ok=0 failed=0 total=$#inputs
+  local -a tags
+  for in in $inputs; do
+    (( n++ ))
+    outdir=${${o_out[-1]:-}#-o}; [[ -n $outdir ]] || outdir=${in:h}/FLAC
+    mkdir -p -- "$outdir" || return 1
+    out=$outdir/${in:t:r}.flac
+    if [[ -e $out ]] && (( ! $#o_force )); then print -u2 -r -- "skip (exists, use -f): $out"; continue; fi
+    title=${in:t:r}; title=${title#(Bonus |)[0-9]## }
+    track=$n
+    tags=( -metadata "title=$title" -metadata "track=$track/$total" )
+    [[ -n ${o_artist[-1]:-} ]] && tags+=( -metadata "artist=${o_artist[-1]#-a}" -metadata "album_artist=${o_artist[-1]#-a}" )
+    [[ -n ${o_album[-1]:-} ]] && tags+=( -metadata "album=${o_album[-1]#-A}" )
+    [[ -n ${o_year[-1]:-} ]] && tags+=( -metadata "date=${o_year[-1]#-y}" )
+    if ffmpeg -hide_banner -nostdin -loglevel error -y -downmix stereo -i "$in" -af "volume=${gain}dB" \
+         -c:a flac -compression_level 8 -sample_fmt s32 $tags "$out" 2> >(grep -v 'incomplete frame' >&2); then
+      print -r -- "ok: $out"; (( ok++ ))
+    else
+      print -u2 -r -- "FAILED: $in"; (( failed++ ))
+    fi
+  done
+  print -r -- "done: $ok converted, $failed failed"
+  (( failed == 0 ))
+}
+
+# Convert FLAC (or any lossless audio) to ALAC .m4a, keeping tags and cover art.
+# -c makes CD-quality files (44.1 kHz, 16-bit, high-quality resampling with dither).
+toalac() {
+  emulate -L zsh
+  setopt extended_glob no_unset
+
+  local -a o_out o_force o_dry o_cd o_help
+  zparseopts -D -E -F -- o:=o_out c=o_cd f=o_force n=o_dry h=o_help -help=o_help || return 2
+
+  if (( $#o_help || $# == 0 )); then
+    print -r -- "usage: toalac [-c] [-f] [-n] [-o DIR] FILE|DIR ...
+  -o DIR  write .m4a files to DIR (default: ALAC/ or ALAC 44.1k-16bit/ next to the input folder)
+  -c      CD quality: 44.1 kHz, 16-bit (default keeps the source rate and depth)
+  -f      overwrite existing files
+  -n      dry run"
+    (( $#o_help )) && return 0 || return 2
+  fi
+  (( $+commands[ffmpeg] )) || { print -u2 "toalac: ffmpeg not found (brew install ffmpeg)"; return 127; }
+
+  local -a inputs; local arg
+  for arg in "$@"; do
+    if [[ -d $arg ]]; then inputs+=( $arg/*.(#i)(flac|wav|aif|aiff)(N.) )
+    elif [[ -f $arg ]]; then inputs+=( $arg )
+    else print -u2 -r -- "toalac: not found: $arg"; fi
+  done
+  (( $#inputs )) || { print -u2 "toalac: no input files"; return 1; }
+
+  local -a enc
+  if (( $#o_cd )); then
+    enc=( -af "aresample=44100:filter_size=64:phase_shift=10:cutoff=0.97:dither_method=triangular" -sample_fmt s16p )
+  else
+    enc=( -sample_fmt s32p )
+  fi
+
+  local in out outdir sub=ALAC ok=0 failed=0
+  (( $#o_cd )) && sub="ALAC 44.1k-16bit"
+  for in in $inputs; do
+    outdir=${${o_out[-1]:-}#-o}; [[ -n $outdir ]] || outdir=${in:h:h}/$sub
+    out=$outdir/${in:t:r}.m4a
+    if (( $#o_dry )); then print -r -- "$in -> $out"; continue; fi
+    mkdir -p -- "$outdir" || return 1
+    if [[ -e $out ]] && (( ! $#o_force )); then print -u2 -r -- "skip (exists, use -f): $out"; continue; fi
+    if ffmpeg -hide_banner -nostdin -loglevel error -y -i "$in" -map 0:a -map '0:v?' -c:v copy -disposition:v attached_pic \
+         $enc -c:a alac -map_metadata 0 "$out"; then
+      print -r -- "ok: $out"; (( ok++ ))
+    else
+      print -u2 -r -- "FAILED: $in"; (( failed++ ))
+    fi
+  done
+  (( $#o_dry )) || print -r -- "done: $ok converted, $failed failed"
+  (( failed == 0 ))
+}

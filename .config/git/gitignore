@@ -99,7 +99,7 @@ flycheck_*.el
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
 
 
 # Thumbnails
@@ -205,7 +205,7 @@ web_modules/
 .env.test.local
 .env.production.local
 .env.local
-.pem
+*.pem
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
@@ -307,7 +307,8 @@ GitHub.sublime-settings
 ### Vim ###
 # Swap
 [._]*.s[a-v][a-z]
-!*.svg  # comment out if you don't need vector files
+# Keep SVGs such as _logo.svg, which the swap pattern above would match
+!*.svg
 [._]*.sw[a-p]
 [._]s[a-rt-v][a-z]
 [._]ss[a-gi-z]
@@ -392,3 +393,16 @@ AGENTS.md
 ### Vercel / Turbo ###
 .vercel
 .turbo
+
+### JetBrains / Fleet / Zed ###
+.idea/
+.fleet/
+.zed/
+
+### Python ###
+__pycache__/
+*.py[cod]
+.venv/
+
+### Local History (VS Code extension) ###
+.history/

@@ -89,7 +89,7 @@ youtube-batch() {
 }
 
 ## Custom Intagram downloader function, downloads and converts for iOS/macOS full compatibility
-instagram() {
+instagram-old() {
   for url in "$@"; do
     output_file="%(channel,creator,uploader)s | %(title.0:48)s | %(id.0:16)s.%(ext)s"
     output_dir="$HOME/downloads/↪ Terminal/instagram.com/"
@@ -512,5 +512,191 @@ woff2otf() {
   done
 
   (( $#o_dry )) || print -r -- "done: $ok converted, $skipped skipped, $failed failed"
+  (( failed == 0 ))
+}
+
+# Downmix 5.1 AC-3 files to stereo FLAC (24-bit) with one album-wide gain,
+# so the loudest track peaks at the target and the balance between tracks is kept.
+ac3tostereo() {
+  emulate -L zsh
+  setopt extended_glob no_unset
+
+  local -a o_out o_force o_dry o_peak o_artist o_album o_year o_help
+  zparseopts -D -E -F -- o:=o_out p:=o_peak a:=o_artist A:=o_album y:=o_year \
+    f=o_force n=o_dry h=o_help -help=o_help || return 2
+
+  if (( $#o_help || $# == 0 )); then
+    print -r -- "usage: ac3tostereo [-f] [-n] [-p PEAK] [-o DIR] [-a ARTIST] [-A ALBUM] [-y YEAR] FILE|DIR ...
+  -o DIR     write .flac files to DIR (default: FLAC/ next to each input)
+  -p PEAK    target peak in dB for the loudest track (default: -1.0)
+  -a/-A/-y   artist, album and year tags
+  -f         overwrite existing .flac files
+  -n         dry run, only measure and print the gain"
+    (( $#o_help )) && return 0 || return 2
+  fi
+  (( $+commands[ffmpeg] )) || { print -u2 "ac3tostereo: ffmpeg not found (brew install ffmpeg)"; return 127; }
+
+  local -a inputs; local arg
+  for arg in "$@"; do
+    if [[ -d $arg ]]; then inputs+=( $arg/*.(#i)ac3(N.) )
+    elif [[ -f $arg ]]; then inputs+=( $arg )
+    else print -u2 -r -- "ac3tostereo: not found: $arg"; fi
+  done
+  (( $#inputs )) || { print -u2 "ac3tostereo: no .ac3 files"; return 1; }
+
+  # Pass 1: find the loudest peak of the decoder's stereo downmix across all files.
+  typeset -F 1 target=${${o_peak[-1]:-}#-p} max=-200 p gain
+  [[ -n ${o_peak[-1]:-} ]] || target=-1.0
+  local in
+  for in in $inputs; do
+    p=$(ffmpeg -hide_banner -nostdin -downmix stereo -i "$in" -af volumedetect -f null - 2>&1 \
+        | awk '/max_volume/ {print $5}')
+    print -r -- "peak ${p} dB: ${in:t}"
+    (( p > max )) && max=$p
+  done
+  (( gain = target - max ))
+  print -r -- "album gain: ${gain} dB (loudest peak ${max} dB -> ${target} dB)"
+  (( $#o_dry )) && return 0
+
+  # Pass 2: encode with the shared gain.
+  local outdir out title track n=0 ok=0 failed=0 total=$#inputs
+  local -a tags
+  for in in $inputs; do
+    (( n++ ))
+    outdir=${${o_out[-1]:-}#-o}; [[ -n $outdir ]] || outdir=${in:h}/FLAC
+    mkdir -p -- "$outdir" || return 1
+    out=$outdir/${in:t:r}.flac
+    if [[ -e $out ]] && (( ! $#o_force )); then print -u2 -r -- "skip (exists, use -f): $out"; continue; fi
+    title=${in:t:r}; title=${title#(Bonus |)[0-9]## }
+    track=$n
+    tags=( -metadata "title=$title" -metadata "track=$track/$total" )
+    [[ -n ${o_artist[-1]:-} ]] && tags+=( -metadata "artist=${o_artist[-1]#-a}" -metadata "album_artist=${o_artist[-1]#-a}" )
+    [[ -n ${o_album[-1]:-} ]] && tags+=( -metadata "album=${o_album[-1]#-A}" )
+    [[ -n ${o_year[-1]:-} ]] && tags+=( -metadata "date=${o_year[-1]#-y}" )
+    if ffmpeg -hide_banner -nostdin -loglevel error -y -downmix stereo -i "$in" -af "volume=${gain}dB" \
+         -c:a flac -compression_level 8 -sample_fmt s32 $tags "$out" 2> >(grep -v 'incomplete frame' >&2); then
+      print -r -- "ok: $out"; (( ok++ ))
+    else
+      print -u2 -r -- "FAILED: $in"; (( failed++ ))
+    fi
+  done
+  print -r -- "done: $ok converted, $failed failed"
+  (( failed == 0 ))
+}
+
+# Convert FLAC (or any lossless audio) to ALAC .m4a, keeping tags and cover art.
+# -c makes CD-quality files (44.1 kHz, 16-bit, high-quality resampling with dither).
+toalac() {
+  emulate -L zsh
+  setopt extended_glob no_unset
+
+  local -a o_out o_force o_dry o_cd o_help
+  zparseopts -D -E -F -- o:=o_out c=o_cd f=o_force n=o_dry h=o_help -help=o_help || return 2
+
+  if (( $#o_help || $# == 0 )); then
+    print -r -- "usage: toalac [-c] [-f] [-n] [-o DIR] FILE|DIR ...
+  -o DIR  write .m4a files to DIR (default: ALAC/ or ALAC 44.1k-16bit/ next to the input folder)
+  -c      CD quality: 44.1 kHz, 16-bit (default keeps the source rate and depth)
+  -f      overwrite existing files
+  -n      dry run"
+    (( $#o_help )) && return 0 || return 2
+  fi
+  (( $+commands[ffmpeg] )) || { print -u2 "toalac: ffmpeg not found (brew install ffmpeg)"; return 127; }
+
+  local -a inputs; local arg
+  for arg in "$@"; do
+    if [[ -d $arg ]]; then inputs+=( $arg/*.(#i)(flac|wav|aif|aiff)(N.) )
+    elif [[ -f $arg ]]; then inputs+=( $arg )
+    else print -u2 -r -- "toalac: not found: $arg"; fi
+  done
+  (( $#inputs )) || { print -u2 "toalac: no input files"; return 1; }
+
+  local -a enc
+  if (( $#o_cd )); then
+    enc=( -af "aresample=44100:filter_size=64:phase_shift=10:cutoff=0.97:dither_method=triangular" -sample_fmt s16p )
+  else
+    enc=( -sample_fmt s32p )
+  fi
+
+  local in out outdir sub=ALAC ok=0 failed=0
+  (( $#o_cd )) && sub="ALAC 44.1k-16bit"
+  for in in $inputs; do
+    outdir=${${o_out[-1]:-}#-o}; [[ -n $outdir ]] || outdir=${in:h:h}/$sub
+    out=$outdir/${in:t:r}.m4a
+    if (( $#o_dry )); then print -r -- "$in -> $out"; continue; fi
+    mkdir -p -- "$outdir" || return 1
+    if [[ -e $out ]] && (( ! $#o_force )); then print -u2 -r -- "skip (exists, use -f): $out"; continue; fi
+    if ffmpeg -hide_banner -nostdin -loglevel error -y -i "$in" -map 0:a -map '0:v?' -c:v copy -disposition:v attached_pic \
+         $enc -c:a alac -map_metadata 0 "$out"; then
+      print -r -- "ok: $out"; (( ok++ ))
+    else
+      print -u2 -r -- "FAILED: $in"; (( failed++ ))
+    fi
+  done
+  (( $#o_dry )) || print -r -- "done: $ok converted, $failed failed"
+  (( failed == 0 ))
+}
+
+## Instagram fetcher for reels, image posts, carousels and stories. Saves to iCloud Drive/Downloads,
+## so files show up on the iPhone. Reels use yt-dlp, everything else gallery-dl; videos get an
+## iOS-friendly HEVC re-encode. Login comes from the browser ($IGFETCH_BROWSER, default firefox).
+instagram() {
+  emulate -L zsh
+  setopt no_unset
+
+  if (( $# == 0 )); then
+    print -r -- "usage: igfetch URL ..."
+    return 2
+  fi
+  local tool
+  for tool in yt-dlp gallery-dl ffmpeg; do
+    (( $+commands[$tool] )) || { print -u2 "igfetch: $tool not found (brew install $tool)"; return 127; }
+  done
+
+  local browser=${IGFETCH_BROWSER:-firefox}
+  local outdir="$HOME/Library/Mobile Documents/com~apple~CloudDocs/Downloads/instagram.com"
+  mkdir -p -- "$outdir" || return 1
+
+  local url file line
+  local -a files
+  integer failed=0
+  for url in "$@"; do
+    url=${url%%\?*}   # drop tracking parameters like ?igsh= or ?psln=
+    files=()
+    case $url in
+      */reel/*|*/reels/*|*/tv/*)
+        files=( ${(f)"$(yt-dlp --quiet --no-warnings --no-config-locations --force-overwrites \
+          --cookies-from-browser "$browser" --format 'bv*+ba/b' \
+          --output "$outdir/%(channel,creator,uploader)s | %(title.0:48)s | %(id.0:16)s.%(ext)s" \
+          --print after_move:filepath "$url")"} )
+        ;;
+      *)
+        # gallery-dl prints one path per file; "# " marks files that already existed.
+        for line in ${(f)"$(gallery-dl --cookies-from-browser "$browser" -D "$outdir" \
+            -f '{username} | {post_shortcode|media_id} | {num:>02}.{extension}' "$url")"}; do
+          files+=( ${line#\# } )
+        done
+        ;;
+    esac
+
+    if (( ! $#files )); then
+      print -u2 -r -- "FAILED: $url"
+      (( failed++ )); continue
+    fi
+
+    for file in $files; do
+      [[ -f $file ]] || continue
+      if [[ ${file:e:l} == (mp4|mov|webm|mkv) && $file != *" | converted.mp4" ]]; then
+        local out="${file:r} | converted.mp4"
+        if ffmpeg -hide_banner -nostdin -loglevel error -y -i "$file" -c:v hevc_videotoolbox -tag:v hvc1 -b:v 6M \
+             -c:a aac -b:a 160k "$out" || ffmpeg -hide_banner -nostdin -loglevel error -y -i "$file" \
+             -c:v libx265 -tag:v hvc1 -crf 20 -pix_fmt yuv420p -c:a aac -b:a 160k "$out"; then
+          rm -f -- "$file"; file=$out
+        fi
+      fi
+      print -r -- "ok: ${file:t}"
+    done
+  done
+  print -r -- "Done "
   (( failed == 0 ))
 }

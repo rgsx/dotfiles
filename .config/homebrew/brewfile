@@ -24,6 +24,10 @@ brew "ffmpeg"
 brew "fontforge"
 # Command-line fuzzy finder written in Go
 brew "fzf"
+# Feature-rich command-line audio/video downloader
+brew "yt-dlp"
+# Command-line downloader for image-hosting site galleries and collections
+brew "gallery-dl"
 # GitHub command-line tool
 brew "gh"
 # Distributed revision control system
@@ -74,8 +78,6 @@ brew "tree"
 brew "uv"
 # JavaScript toolchain manager for reproducible environments
 brew "volta"
-# Feature-rich command-line audio/video downloader
-brew "yt-dlp"
 # Shell extension to navigate your filesystem faster
 brew "zoxide"
 # Zsh port of Fish shell's history search
@@ -147,6 +149,9 @@ vscode "hyperb1iss.silkcircuit-theme"
 vscode "monosen.neomono"
 vscode "ni3rav.andromeda-night"
 vscode "pankajghosh.nexus-dark"
+vscode "rgsx.carfax-abbey"
+vscode "rgsx.great-dreamer"
+vscode "rust-lang.rust-analyzer"
 vscode "usernamehw.errorlens"
 vscode "znck.vue"
 uv "browser-use"
